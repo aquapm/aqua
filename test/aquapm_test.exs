@@ -1,8 +1,8 @@
-defmodule AquapmTest do
+defmodule AquaTest do
   use ExUnit.Case
-  doctest Aquapm
+  doctest Aqua
 
   test "greets the world" do
-    assert Aquapm.hello() == :world
+    assert Aqua.hello() == :world
   end
 end
