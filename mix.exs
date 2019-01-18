@@ -8,26 +8,45 @@ defmodule Aqua.MixProject do
     [
       app: @app,
       version: @version,
-      elixir: "~> 1.7",
+      elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      package: package(),
+      description: description(),
       aliases: aliases()
+      # docs: docs()
     ]
   end
 
   def application, do: [extra_applications: [:logger]]
 
+  def description() do
+    """
+    Elixir project management tool.
+    """
+  end
+
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
       {:jason, "~> 1.1"},
-      {:yaml_elixir, "~> 2.1"}
+      {:yaml_elixir, "~> 2.1"},
+      {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 
   defp aliases() do
     [
       build: [&build_releases/1]
+    ]
+  end
+
+  defp package do
+    [
+      maintainers: ["Dmitry Rubinstein"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/aquapm/aqua"},
+      files: ~w(mix.exs README* CHANGELOG* lib)
     ]
   end
 
