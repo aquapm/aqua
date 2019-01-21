@@ -1,5 +1,6 @@
 defmodule Aqua.Github do
   alias Aqua.Schema.LocalRepo
+  alias Aqua.Jason
 
   def list_all_official_templates() do
     :inets.start()

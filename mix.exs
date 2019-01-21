@@ -29,15 +29,14 @@ defmodule Aqua.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:jason, "~> 1.1"},
-      {:yaml_elixir, "~> 2.1"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 
   defp aliases() do
     [
-      build: [&build_releases/1]
+      build: [&build_releases/1],
+      reinstall: ["build", &reinstall_archive/1]
     ]
   end
 
@@ -56,5 +55,9 @@ defmodule Aqua.MixProject do
     Mix.Tasks.Compile.run([])
     Mix.Tasks.Archive.Build.run(["--output=./#{@app}-archive/#{@app}-#{@version}.ez"])
     File.cp("./#{@app}-archive/#{@app}-#{@version}.ez", "./#{@app}-archive/#{@app}.ez")
+  end
+
+  defp reinstall_archive(_) do
+    Mix.Tasks.Archive.Install.run(["aqua-archive/aqua.ez", "--force"])
   end
 end

@@ -1,8 +1,6 @@
 defmodule Aqua.Cache do
   alias Aqua.SCM.Git
 
-  alias Aqua.Schema.LocalRepo
-
   def aqua_path() do
     System.user_home()
     |> Path.join(".aqua")
@@ -35,37 +33,14 @@ defmodule Aqua.Cache do
     Path.join([aqua_path(), user, repo])
   end
 
-  def clone_repo(route, path) do
-    Git.clone()
-  end
-
   def repo_exists?(user, repo) do
     File.dir?(generate_path(user, repo))
   end
 
-  def repo_exists?(%LocalRepo{path: path, cloned?: :undefined} = repo) do
-    %{repo | cloned?: File.dir?(path)}
-  end
-
-  def repo_exists?(%LocalRepo{} = repo), do: repo
-
-  @doc """
-  Syncornizes FS and in-memory repo information
-  """
-  def sync_repo(repo) do
-    case repo_exists?(repo) do
-      %{cloned?: true} = repo -> {:ok, repo}
-      %{cloned?: false} = repo ->
-        IO.write(IO.ANSI.format([:cyan, "➤ Updating template cache: #{repo.route} "]))
-        # Mix.Shell.IO.info([:cyan, "➤ Updating template cache: #{repo.route}"])
-        case Git.clone_repo(repo) do
-          {:ok, _} = result ->
-            Mix.Shell.IO.info([:green, "✔ Done", :reset])
-            result
-          {:error, _} = result ->
-            Mix.Shell.IO.info([:red, "✘ Fail", :reset])
-            result
-        end
+  def sync_repo(url, fs) do
+    case Git.clone_repo(url, fs) do
+      {:ok, _} -> :ok
+      {:error, error} -> {:error, {:git, error}}
     end
   end
 end
