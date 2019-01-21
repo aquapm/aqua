@@ -8,7 +8,6 @@ defmodule Aqua.Schema.Inject do
             module_name: nil,
             template: nil,
             # :none, :flat, :umbrella
-            injection_path: "",
             project_type: :none,
             assigns: %{},
             valid?: :ok
@@ -18,7 +17,6 @@ defmodule Aqua.Schema.Inject do
           path: String.t(),
           module_name: atom(),
           template: any(),
-          injection_path: String.t(),
           assigns: Map.t(),
           project_type: :none | :flat | :umbrella,
           valid?: :ok | {:error, atom()}
@@ -91,11 +89,14 @@ defmodule Aqua.Schema.Inject do
     end
   end
 
+  @doc """
+  This function populate generic assigns, that will be used inside injected document
+  """
   def generate_assigns(
         %__MODULE__{
           project_type: type,
           module_name: module_alias,
-          injection_path: injection_path,
+          path: path,
           template: template
         } = inject,
         args
@@ -104,7 +105,7 @@ defmodule Aqua.Schema.Inject do
       Aqua.Assigns.global_assigns(Atom.to_string(Mix.Project.config()[:app]), type == :umbrella)
       |> Map.merge(%{
         module_alias: module_alias,
-        injection_path: injection_path
+        path: path
       })
 
     case Aqua.Options.prepare(args, template) do
@@ -113,6 +114,24 @@ defmodule Aqua.Schema.Inject do
 
       {:error, bad_args} ->
         %{inject | valid?: {:error, {:args, bad_args}}}
+    end
+  end
+
+  def generate(
+        %__MODULE__{
+          path: to_path,
+          template: %{injection_path: from_path, fs_path: prefix_from_path},
+          assigns: assigns
+        } = inject
+      ) do
+    try do
+      output = EEx.eval_file(Path.join(prefix_from_path, from_path), assigns: assigns)
+      File.mkdir_p!(Path.dirname(to_path))
+      File.write!(to_path, output)
+      inject
+    rescue
+      error ->
+        %{inject | valid?: {:error, {:gen, error}}}
     end
   end
 end
