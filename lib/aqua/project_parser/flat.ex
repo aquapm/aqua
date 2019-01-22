@@ -5,6 +5,8 @@ defmodule Aqua.ProjectParser.Flat do
 
   alias Aqua.ProjectParser
 
+  @spec pathes(raw_path :: binary(), app :: atom()) ::
+          {:error, :absolute_path} | {:ok, {checked_path :: binary(), module_alias :: atom()}}
   def pathes(raw_path, app) do
     case ProjectParser.check_path_type(raw_path) do
       :alias -> alias_to_path(raw_path, app)

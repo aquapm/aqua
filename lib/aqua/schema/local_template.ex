@@ -79,11 +79,13 @@ defmodule Aqua.Schema.LocalTemplate do
   def sync_repo(%__MODULE__{git_clone_url: url, fs_path: fs, org: org, repo: repo} = lt) do
     case File.dir?(fs) do
       false ->
-        Mix.Shell.IO.info([:cyan, "➤\tUpdating template cache: #{org}/#{repo} "])
+        IO.write(
+          IO.ANSI.format([:cyan, "➤  Updating template cache: ", :magenta, "#{org}/#{repo} "])
+        )
 
         case Cache.sync_repo(url, fs) do
           :ok ->
-            Mix.Shell.IO.info([:green, "✔\tDone"])
+            Mix.Shell.IO.info([:green, "✔  Done"])
             %{lt | cloned?: true}
 
           {:error, reason} ->

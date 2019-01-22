@@ -3,6 +3,8 @@ defmodule Aqua.Schema.Inject do
   alias Aqua.ProjectParser.Flat, as: FlatParser
   alias Aqua.Schema.LocalTemplate
 
+  alias Aqua.Views.Inject, as: View
+
   defstruct raw: "",
             path: "",
             module_name: nil,
@@ -126,9 +128,22 @@ defmodule Aqua.Schema.Inject do
       ) do
     try do
       output = EEx.eval_file(Path.join(prefix_from_path, from_path), assigns: assigns)
-      File.mkdir_p!(Path.dirname(to_path))
-      File.write!(to_path, output)
-      inject
+      View.file_inject(Path.relative_to(to_path, File.cwd!()))
+
+      case File.mkdir_p(Path.dirname(to_path)) do
+        :ok ->
+          case File.write(to_path, output) do
+            :ok ->
+              View.done()
+              inject
+
+            {:error, _error} ->
+              {:error, :file_create}
+          end
+
+        {:error, _error} ->
+          {:error, :file_create}
+      end
     rescue
       error ->
         %{inject | valid?: {:error, {:gen, error}}}

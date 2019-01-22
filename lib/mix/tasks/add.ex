@@ -16,7 +16,6 @@ defmodule Aqua.Tasks.Add do
     |> assert_valid()
     |> Inject.generate()
     |> assert_valid()
-    |> IO.inspect()
   end
 
   def run([]), do: Help.add()
