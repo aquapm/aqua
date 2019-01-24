@@ -157,6 +157,7 @@ defmodule Aqua.Schema.Inject do
     end
   end
 
+  # TODO: Rewrite this crazy method!
   def generate(
         %__MODULE__{
           path: to_path,
@@ -166,21 +167,29 @@ defmodule Aqua.Schema.Inject do
       ) do
     try do
       output = EEx.eval_file(Path.join(prefix_from_path, from_path), assigns: assigns)
-      View.file_inject(Path.relative_to(to_path, File.cwd!()))
 
-      case File.mkdir_p(Path.dirname(to_path)) do
-        :ok ->
-          case File.write(to_path, output) do
+      with false <- assigns[:force],
+           true <- File.exists?(to_path),
+           false <- Mix.Shell.IO.yes?("⚠  File already exists. Override?") do
+        inject
+      else
+        _ ->
+          View.file_inject(Path.relative_to(to_path, File.cwd!()))
+
+          case File.mkdir_p(Path.dirname(to_path)) do
             :ok ->
-              View.done()
-              inject
+              case File.write(to_path, output) do
+                :ok ->
+                  View.done()
+                  inject
+
+                {:error, _error} ->
+                  {:error, :file_create}
+              end
 
             {:error, _error} ->
               {:error, :file_create}
           end
-
-        {:error, _error} ->
-          {:error, :file_create}
       end
     rescue
       error ->
