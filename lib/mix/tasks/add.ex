@@ -3,26 +3,20 @@ defmodule Aqua.Tasks.Add do
   alias Aqua.Views.Add, as: View
   alias Aqua.Tasks.Help
 
+  @doc false
+  @spec run(list(String.t())) :: :ok | no_return()
   def run([template | [path | args]]) do
-    %Inject{raw: path}
-    |> Inject.set_project_type()
-    |> Inject.assert_in_project()
-    |> assert_valid()
-    |> Inject.calculate_pathes()
-    |> assert_valid()
-    |> Inject.load_template(template)
-    |> assert_valid()
-    |> Inject.generate_assigns(args)
-    |> assert_valid()
-    |> Inject.generate()
-    |> assert_valid()
+    case %Inject{raw: path}
+         |> Inject.set_project_type()
+         |> Inject.assert_in_project()
+         |> Inject.calculate_pathes()
+         |> Inject.load_template(template)
+         |> Inject.generate_assigns(args)
+         |> Inject.generate() do
+      %Inject{valid?: :ok} -> :ok
+      %Inject{valid?: {:error, error}} -> View.panic(error)
+    end
   end
 
   def run([]), do: Help.add()
-
-  defp assert_valid(%Inject{valid?: :ok} = inject), do: inject
-
-  defp assert_valid(%Inject{valid?: {:error, type}}) do
-    View.panic(type)
-  end
 end

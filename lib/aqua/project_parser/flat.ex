@@ -1,6 +1,6 @@
 defmodule Aqua.ProjectParser.Flat do
   @moduledoc """
-  This module calculates pathes and aliases for umbrella projects.
+  This module calculates pathes and aliases for flat project.
   """
 
   alias Aqua.ProjectParser

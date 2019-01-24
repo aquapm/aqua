@@ -27,6 +27,10 @@ defmodule Aqua.Schema.LocalTemplate do
           valid?: :ok | {:error, any()}
         ]
 
+  @doc """
+  Parse route into **Organization name**, **Repository name** and **Injection name**.
+  Populates `Aqua.LocalTemplate` structure with this data
+  """
   @spec normalize_route(__MODULE__.t()) :: __MODULE__.t()
   def normalize_route(%__MODULE__{valid?: {:error, _}} = lt), do: lt
 

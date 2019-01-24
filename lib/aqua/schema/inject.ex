@@ -14,7 +14,7 @@ defmodule Aqua.Schema.Inject do
             assigns: %{},
             valid?: :ok
 
-  @type t :: %{
+  @type t :: %__MODULE__{
           raw: String.t(),
           path: String.t(),
           module_name: atom(),
@@ -25,11 +25,18 @@ defmodule Aqua.Schema.Inject do
         }
 
   @doc """
-  Identifies the type of a project. Sets it for `Inject` structure.
+  Identifies the type of a project, on which the `mix aqua` command is called.
+  Set the valuse inside `Inject` structure under **project_type**.
 
-  Project structure can be: :none, :flat, :umbrella
+  Project structure can be:
+
+  * **:none** - we are not inside the project;
+  * **:flat** - we are inside flat *[common]* project;
+  * **:umbrella** - we are inside **umbrella** project;
   """
   @spec set_project_type(inject :: __MODULE__.t()) :: __MODULE__.t()
+  def set_project_type(%__MODULE__{valid?: {:error, _}} = inject), do: inject
+
   def set_project_type(%__MODULE__{} = inject) do
     case Mix.Project.umbrella?() do
       false ->
@@ -44,17 +51,35 @@ defmodule Aqua.Schema.Inject do
   end
 
   @doc """
-  Sets `Inject` to invalid, if the project is :none
+  Sets `Inject` to invalid, if the value of **project_type** is **:none**.
+
+  If the **project_type** value is anything else - pathes the `Inject` struct as is.
   """
   @spec assert_in_project(__MODULE__.t()) :: __MODULE__.t()
+  def assert_in_project(%__MODULE__{valid?: {:error, _}} = inject), do: inject
+
   def assert_in_project(%__MODULE__{project_type: :none} = inject),
     do: Map.put(inject, :valid?, {:error, :not_in_project})
 
   def assert_in_project(%__MODULE__{project_type: _} = inject), do: inject
 
-  @spec calculate_pathes(__MODULE__.t()) :: nil
+  @doc """
+  Calculate pathes for injecting file. Pathes for umbrella differs from pathes for flat project.
+
+  Function will populate:
+
+  * fils-system path of injecting file under **:path** key;
+  * module_name for injecting module under **:module_name** key;
+
+  Calculation is preformed from value of **:raw** key inside `Inject`. Raw path can *either* be file-system **OR** valid Elixir's module name.
+
+  This function as the result either will populate structure with pathes, or invalidate the `Inject` with well-formed error, if path or Elixir's module name
+  from raw input are invalid for this type of a project and injection.
+  """
+  @spec calculate_pathes(__MODULE__.t()) :: __MODULE__.t()
+  def calculate_pathes(%__MODULE__{valid?: {:error, _}} = inject), do: inject
+
   def calculate_pathes(%__MODULE__{raw: raw_path, project_type: :umbrella} = inject) do
-    # Pathes for umbrella differs from pathes for flat project
     # We are sure, that for umbrella application we have a list of applications (may be empty)
     case UmbrellaParser.pathes(raw_path, Mix.Project.apps_paths()) do
       {:ok, {path, module_name}} ->
@@ -68,7 +93,6 @@ defmodule Aqua.Schema.Inject do
   end
 
   def calculate_pathes(%__MODULE__{raw: raw_path, project_type: :flat} = inject) do
-    # Pathes for umbrella differs from pathes for flat project
     case FlatParser.pathes(raw_path, Mix.Project.config()[:app]) do
       {:ok, {path, module_name}} ->
         inject
@@ -80,6 +104,16 @@ defmodule Aqua.Schema.Inject do
     end
   end
 
+  @doc """
+  Loads `LocalTemplate`, and stores it inside **:template** key inside.
+
+  Populates errors, that appears during `LocalTemplates` loading from `LocalTemplate` struct into
+  `Inject` struct.
+
+  Can return either `Inject` struct with populated valid `LocalTemplate` under **:template** key,
+  or `Inject` with well-formed error under **:valid?** key.
+  """
+  @spec load_template(__MODULE__.t(), any()) :: __MODULE__.t()
   def load_template(%__MODULE__{} = inject, template) do
     case %LocalTemplate{raw_route: template}
          |> LocalTemplate.normalize_route()
@@ -110,11 +144,15 @@ defmodule Aqua.Schema.Inject do
         path: path
       })
 
-    case Aqua.Options.prepare(args, template) do
+    case OptionParser.parse!(args, Aqua.Options.populate_strict(template.injection_options))
+         |> elem(0)
+         |> Aqua.Options.validate_required_opts(template.injection_options) do
       {:ok, arg_assigns} ->
-        %{inject | assigns: Map.merge(assigns, arg_assigns)}
+        IO.inspect(arg_assigns)
+        %{inject | assigns: Map.merge(assigns, Enum.into(arg_assigns, %{}))}
 
       {:error, bad_args} ->
+        IO.inspect(bad_args)
         %{inject | valid?: {:error, {:args, bad_args}}}
     end
   end
