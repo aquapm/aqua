@@ -26,7 +26,6 @@ defmodule Aqua.Options do
       |> inject_strict(option_name, option_type)
       |> inject_aliases(option_name, Map.get(option, "aliases", []))
     end)
-    |> IO.inspect()
   end
 
   defp inject_strict(option_parser_options, name, type) do
