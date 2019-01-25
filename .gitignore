@@ -21,6 +21,7 @@ erl_crash.dump
 
 # Ignore package tarball (built via "mix hex.build").
 aqua-*.tar
+aqua-archive
 
 # ElixirLS
 .elixir_ls
