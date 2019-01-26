@@ -81,7 +81,7 @@ defmodule Aqua.Schema.Inject do
 
   def calculate_pathes(%__MODULE__{raw: raw_path, project_type: :umbrella} = inject) do
     # We are sure, that for umbrella application we have a list of applications (may be empty)
-    case UmbrellaParser.pathes(raw_path, Mix.Project.apps_paths()) do
+    case UmbrellaParser.inject_pathes(raw_path, Mix.Project.apps_paths()) do
       {:ok, {path, module_name}} ->
         inject
         |> Map.put(:path, path)
@@ -93,7 +93,7 @@ defmodule Aqua.Schema.Inject do
   end
 
   def calculate_pathes(%__MODULE__{raw: raw_path, project_type: :flat} = inject) do
-    case FlatParser.pathes(raw_path, Mix.Project.config()[:app]) do
+    case FlatParser.inject_pathes(raw_path, Mix.Project.config()[:app]) do
       {:ok, {path, module_name}} ->
         inject
         |> Map.put(:path, path)

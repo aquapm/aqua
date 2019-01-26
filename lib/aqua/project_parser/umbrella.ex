@@ -5,10 +5,11 @@ defmodule Aqua.ProjectParser.Umbrella do
 
   alias Aqua.ProjectParser
 
-  def pathes(raw_path, apps_list) do
+  def inject_pathes(raw_path, apps_list) do
     case ProjectParser.check_path_type(raw_path) do
       :alias -> alias_to_path(raw_path, apps_list)
       :path -> path_to_alias(raw_path, apps_list)
+      :invalid -> {:error, :invalid_path_alias}
     end
   end
 

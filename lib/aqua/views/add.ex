@@ -20,6 +20,34 @@ defmodule Aqua.Views.Add do
     ])
   end
 
+  def panic(:invalid_path_alias) do
+    View.panic([
+      "You are calling ",
+      :cyan,
+      :bright,
+      "mix aqua add ",
+      :normal,
+      :red,
+      "followed by invalid ",
+      :yellow,
+      :bright,
+      ":path ",
+      :red,
+      :normal,
+      "or ",
+      :yellow,
+      :bright,
+      ":alias",
+      :red,
+      :normal,
+      "!\nPlease, ensure that you ",
+      :bright,
+      "didn't skip ",
+      :normal,
+      "this parameter before calling additional arguments."
+    ])
+  end
+
   def panic(:absolute_path) do
     View.panic([
       "Given path is out of the project scope!\nPlease ensure:\n\n",
@@ -36,12 +64,20 @@ defmodule Aqua.Views.Add do
       end)
 
     View.panic([
-      "For given ", :cyan, "#{inspect(type)}", :red, ", umbrella's child application can be found!\n\nAvailable applications are:\n",
+      "For given ",
+      :cyan,
+      "#{inspect(type)}",
+      :red,
+      ", umbrella's child application can be found!\n\nAvailable applications are:\n",
       apps_list,
       "\n",
       :normal,
       :red,
-      "Please, check your ", :cyan, "#{inspect(type)}", :red, " again!"
+      "Please, check your ",
+      :cyan,
+      "#{inspect(type)}",
+      :red,
+      " again!"
     ])
   end
 
