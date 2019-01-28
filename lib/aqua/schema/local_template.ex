@@ -10,8 +10,9 @@ defmodule Aqua.Schema.LocalTemplate do
             injection_path: nil,
             injection_options: nil,
             git_clone_url: nil,
+            git_update?: false,
             fs_path: nil,
-            cloned?: :undefined,
+            synced?: :undefined,
             valid?: :ok
 
   @type t :: [
@@ -22,8 +23,9 @@ defmodule Aqua.Schema.LocalTemplate do
           injection_path: String.t(),
           injection_options: any(),
           git_clone_url: String.t(),
+          git_update?: true | false,
           fs_path: String.t(),
-          cloned?: :undefined | true | false,
+          synced?: :undefined | true | false,
           valid?: :ok | {:error, any()}
         ]
 
@@ -78,26 +80,18 @@ defmodule Aqua.Schema.LocalTemplate do
     end
   end
 
+  @doc """
+  Downloads repo, if it hasn't been downloaded yet. Does nothing if it's presented.
+  """
   def sync_repo(%__MODULE__{valid?: {:error, _}} = lt), do: lt
 
-  def sync_repo(%__MODULE__{git_clone_url: url, fs_path: fs, org: org, repo: repo} = lt) do
-    case File.dir?(fs) do
-      false ->
-        IO.write(
-          IO.ANSI.format([:cyan, "➤  Updating template cache: ", :magenta, "#{org}/#{repo} "])
-        )
-
-        case Cache.sync_repo(url, fs) do
-          :ok ->
-            Mix.Shell.IO.info([:green, "✔  Done"])
-            %{lt | cloned?: true}
-
-          {:error, reason} ->
-            %{lt | cloned?: false, valid?: {:error, reason}}
-        end
-
-      true ->
-        %{lt | cloned?: true}
+  def sync_repo(
+        %__MODULE__{git_clone_url: url, fs_path: fs, org: org, repo: repo, git_update?: update?} =
+          lt
+      ) do
+    case Cache.sync_repo(url, fs, update?, org, repo) do
+      :ok -> %{lt | synced?: true}
+      {:error, reason} -> %{lt | synced?: false, valid?: {:error, reason}}
     end
   end
 

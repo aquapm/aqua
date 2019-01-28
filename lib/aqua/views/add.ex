@@ -82,6 +82,6 @@ defmodule Aqua.Views.Add do
   end
 
   def panic({:git, reason}) do
-    View.panic(["Fail! ", reason])
+    View.panic(["Fail!\n", reason])
   end
 end

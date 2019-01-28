@@ -130,7 +130,7 @@ defmodule Aqua.Schema.Inject do
   @doc """
   This function populate generic assigns, that will be used inside injected document
   """
-  def generate_assigns(%__MODULE__{valid?: {:error, _}} = inject), do: inject
+  def generate_assigns(%__MODULE__{valid?: {:error, _}} = inject, args), do: inject
 
   def generate_assigns(
         %__MODULE__{

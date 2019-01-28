@@ -37,10 +37,57 @@ defmodule Aqua.Cache do
     File.dir?(generate_path(user, repo))
   end
 
-  def sync_repo(url, fs) do
-    case Git.clone_repo(url, fs) do
-      {:ok, _} -> :ok
-      {:error, error} -> {:error, {:git, error}}
+  def sync_repo(url, fs, update?, org, repo) do
+    case File.dir?(fs) do
+      false ->
+        IO.write(
+          IO.ANSI.format([
+            :cyan,
+            "➤  ",
+            :bright,
+            "Downloading ",
+            :normal,
+            "template cache: ",
+            :magenta,
+            "#{org}/#{repo} "
+          ])
+        )
+
+        case Git.clone_repo(url, fs) do
+          {:ok, _} ->
+            Mix.Shell.IO.info([:green, "✔  Done"])
+            :ok
+
+          {:error, error} ->
+            {:error, {:git, error}}
+        end
+
+      true ->
+        if update? do
+          IO.write(
+            IO.ANSI.format([
+              :cyan,
+              "➤  ",
+              :bright,
+              "Updating ",
+              :normal,
+              "template cache: ",
+              :magenta,
+              "#{org}/#{repo} "
+            ])
+          )
+
+          case Git.pull_repo(fs) do
+            {:ok, _} ->
+              Mix.Shell.IO.info([:green, "✔  Done"])
+              :ok
+
+            {:error, error} ->
+              {:error, {:git, error}}
+          end
+        else
+          :ok
+        end
     end
   end
 end

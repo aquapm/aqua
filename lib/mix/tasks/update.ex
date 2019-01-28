@@ -1,10 +1,26 @@
-defmodule Mix.Tasks.Aqua.Update do
-  use Mix.Task
+defmodule Aqua.Tasks.Update do
   alias Aqua.Cache
 
-  @shortdoc "List official project templates"
-  def run(_) do
+  alias Aqua.Schema.LocalTemplate
+  alias Aqua.Views.Update, as: View
+
+  @moduledoc """
+  * `mix aqua update` - updating official repository list cache
+  * `mix aqua update otp` - updateing `aquapm/otp`
+  * `mix aqua update phoenix/phx` - updating `phoenix/phx`
+  """
+
+  def run([]) do
     Cache.update_official_list()
     Mix.Shell.IO.info("Official templates list updated")
+  end
+
+  def run([template | _args]) do
+    case %LocalTemplate{raw_route: template, git_update?: true}
+    |> LocalTemplate.normalize_route()
+    |> LocalTemplate.sync_repo() do
+      %LocalTemplate{valid?: {:error, error}} -> View.panic(error)
+      _ -> :ok
+    end
   end
 end
