@@ -8,7 +8,7 @@ defmodule Aqua.ProjectParser do
   """
   @spec check_path_type(path :: String.t()) :: :alias | :path | :invalid
   def check_path_type(path) do
-    case String.match?("-f", ~r/^[\.\w\/].*$/) do
+    case String.match?(path, ~r/^[\.\w\/].*$/) do
       true ->
         if inspect(Module.concat(Elixir, path)) == path do
           :alias
@@ -49,5 +49,9 @@ defmodule Aqua.ProjectParser do
       |> Macro.camelize()
 
     {:ok, inspect(Module.concat([module_string]))}
+  end
+
+  def validate_project_name(name) do
+
   end
 end

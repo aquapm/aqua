@@ -24,11 +24,13 @@ defmodule Aqua.Tasks.New do
          |> Scaffold.assert_not_in_flat_project()
          # For umbrella - will inject inside apps folder.
          |> Scaffold.calculate_pathes()
-         |> Scaffold.load_template(template)
-         # will panic if the project is only under umbrella but inserted as flat and vice verse
-         |> Scaffold.assert_inject_type()
-         |> Scaffold.generate_assigns(args)
-         |> Scaffold.generate() do
+         |> IO.inspect()
+        #  |> Scaffold.load_template(template)
+        #  # will panic if the project is only under umbrella but inserted as flat and vice verse
+        #  |> Scaffold.assert_inject_type()
+        #  |> Scaffold.generate_assigns(args)
+        #  |> Scaffold.generate()
+    do
       %Scaffold{valid?: :ok} -> :ok
       %Scaffold{valid?: {:error, error}} -> View.panic(error)
     end
