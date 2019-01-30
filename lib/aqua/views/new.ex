@@ -14,9 +14,4 @@ defmodule Aqua.Views.New do
       "Fail! mix aqua new accepts only one-level project names!\nEnsure your project name is valid"
     ])
   end
-
-  def panic(error) do
-    IO.inspect(error)
-    System.halt(1)
-  end
 end
