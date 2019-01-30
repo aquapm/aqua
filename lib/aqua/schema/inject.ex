@@ -114,7 +114,7 @@ defmodule Aqua.Schema.Inject do
   or `Inject` with well-formed error under **:valid?** key.
   """
   @spec load_template(__MODULE__.t(), any()) :: __MODULE__.t()
-  def load_template(%__MODULE__{valid?: {:error, _}} = inject), do: inject
+  def load_template(%__MODULE__{valid?: {:error, _}} = inject, _template), do: inject
 
   def load_template(%__MODULE__{} = inject, template) do
     case %LocalTemplate{raw_route: template}
@@ -130,7 +130,7 @@ defmodule Aqua.Schema.Inject do
   @doc """
   This function populate generic assigns, that will be used inside injected document
   """
-  def generate_assigns(%__MODULE__{valid?: {:error, _}} = inject, args), do: inject
+  def generate_assigns(%__MODULE__{valid?: {:error, _}} = inject, _args), do: inject
 
   def generate_assigns(
         %__MODULE__{

@@ -37,4 +37,14 @@ defmodule Aqua.Template.Meta do
       end
     end)
   end
+
+  def get_template(repo_fs) do
+    case parse_meta(repo_fs) do
+      {:ok, %{"files" => files, "options" => options} = template_meta} ->
+        {:ok, Map.take(template_meta, ["files", "options"])}
+
+      _error ->
+        {:error, :template_corrupted}
+    end
+  end
 end

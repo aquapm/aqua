@@ -15,9 +15,10 @@ defmodule Aqua.ProjectParser do
         else
           :path
         end
-      false -> :invalid
-    end
 
+      false ->
+        :invalid
+    end
   end
 
   @doc """
@@ -51,7 +52,11 @@ defmodule Aqua.ProjectParser do
     {:ok, inspect(Module.concat([module_string]))}
   end
 
-  def validate_project_name(name) do
-
+  @spec assert_project_name(name :: String.t()) :: {:error, :bad_project_name} | {:ok, String.t()}
+  def assert_project_name(name) do
+    case String.match?(name, ~r/^\w[\w_]*$/) do
+      true -> {:ok, name}
+      false -> {:error, :bad_project_name}
+    end
   end
 end

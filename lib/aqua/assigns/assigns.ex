@@ -33,13 +33,22 @@ defmodule Aqua.Assigns do
     end
   end
 
-  def global_assigns(project_name, in_umbrella) do
+  @spec global_assigns(project_name :: String.t(), in_umbrella? :: boolean()) :: Map.t()
+  @doc """
+  Generates basic assigns, including:
+
+  * Host OS
+  * Date and Time
+  * Elixir and Erlang / OTP versions
+  * If the generating is inside umbrella
+  """
+  def global_assigns(project_name, in_umbrella?) do
     %{
       host_os: os_type(),
       now: date_time_values(),
       project_name: project_name,
       project_name_camel_case: Macro.camelize(project_name),
-      in_umbrella?: in_umbrella,
+      in_umbrella?: in_umbrella?,
       elixir_version: System.version(),
       erlang_version: :erlang.system_info(:version),
       otp_release: :erlang.system_info(:otp_release)

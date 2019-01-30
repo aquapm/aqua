@@ -13,6 +13,7 @@ defmodule Aqua.Schema.Scaffold do
   alias Aqua.Cache
   alias Aqua.Github
   alias Aqua.Template.Meta
+  alias Aqua.Schema.LocalTemplate
 
   defstruct raw: nil,
             project_name: nil,
@@ -105,6 +106,70 @@ defmodule Aqua.Schema.Scaffold do
 
       error ->
         Map.put(inject, :valid?, error)
+    end
+  end
+
+  @doc """
+  Loads `LocalTemplate`, and stores it inside **:template** key inside.
+
+  Populates errors, that appears during `LocalTemplates` loading from `LocalTemplate` struct into
+  `Scaffold` struct.
+
+  Can return either `Scaffold` struct with populated valid `LocalTemplate` under **:template** key,
+  or `Inject` with well-formed error under **:valid?** key.
+  """
+  @spec load_template(__MODULE__.t(), any()) :: __MODULE__.t()
+  def load_template(%__MODULE__{valid?: {:error, _}} = scaffold, _template), do: scaffold
+
+  def load_template(%__MODULE__{} = scaffold, template) do
+    case %LocalTemplate{raw_route: template}
+         |> LocalTemplate.normalize_route()
+         |> LocalTemplate.sync_repo()
+         |> LocalTemplate.load_template() do
+      %{valid?: :ok} = template -> %{scaffold | template: template}
+      %{valid?: error} = template -> %{scaffold | template: template, valid?: error}
+    end
+  end
+
+  @doc """
+  This function populate generic assigns, that will be used inside injected document
+  """
+  def generate_assigns(%__MODULE__{valid?: {:error, _}} = scaffold, _args), do: scaffold
+
+  def generate_assigns(
+        %__MODULE__{
+          project_type: type,
+          project_name: project_name,
+          path: path,
+          template: template
+        } = scaffold,
+        args
+      ) do
+    assigns =
+      Aqua.Assigns.global_assigns(project_name, type == :umbrella)
+      |> Map.merge(%{
+        path: path
+      })
+
+    case OptionParser.parse!(args, Aqua.Options.populate_strict(template.template_options))
+         |> elem(0)
+         |> Aqua.Options.validate_required_opts(template.template_options) do
+      {:ok, arg_assigns} ->
+        %{scaffold | assigns: Map.merge(assigns, Enum.into(arg_assigns, %{}))}
+
+      {:error, bad_args} ->
+        %{scaffold | valid?: {:error, {:args, bad_args}}}
+    end
+  end
+
+  # TODO: Rewrite this crazy method!
+  def generate(%__MODULE__{valid?: {:error, _}} = scaffold), do: scaffold
+
+  def generate(%__MODULE__{template: template, path: generate_path, assigns: assigns} = scaffold) do
+    case Aqua.Generator.generate_template(generate_path, template, assigns) do
+      {:ok, _} -> scaffold
+      {:error, gen_error} ->
+        %{scaffold | valid?: {:error, gen_error}}
     end
   end
 end

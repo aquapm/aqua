@@ -11,9 +11,15 @@ defmodule Aqua.SCM.Git do
   end
 
   def pull_repo(fs) do
-    case git_run(["-C", fs, "pull", "-f"]) do
-      {message, 0} -> {:ok, message}
-      error -> decorate_error(error)
+    case git_run(["-C", fs, "checkout", "master"]) do
+      {message, 0} ->
+        case git_run(["-C", fs, "pull", "-f"]) do
+          {message, 0} -> {:ok, message}
+          error -> decorate_error(error)
+        end
+
+      error ->
+        decorate_error(error)
     end
   end
 
