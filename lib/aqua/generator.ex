@@ -8,6 +8,7 @@ defmodule Aqua.Generator do
       {:ok, :success}
     else
       _ ->
+        File.rm_rf(generate_path)
         do_generate_template(generate_path, template, assigns)
     end
   end
