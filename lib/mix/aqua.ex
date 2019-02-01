@@ -9,6 +9,7 @@ defmodule Mix.Tasks.Aqua do
   def run(["new" | args]), do: New.run(args)
   def run(["add" | args]), do: Add.run(args)
   def run(["update" | args]), do: Update.run(args)
+  def run(["help" | args]), do: Help.run(args)
   def run([_ | args]), do: Help.aqua()
 
   @doc """

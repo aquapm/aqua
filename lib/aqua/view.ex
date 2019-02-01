@@ -1,5 +1,15 @@
 defmodule Aqua.View do
   @spec panic(any()) :: no_return()
+
+  # TODO: Set these colors everywhere where needed. Issue #3
+  @colors [
+    elixir: [:magenta, :bright],
+    bash: [:light_yellow, :bright],
+    fs: [:yellow, :bright],
+    aqua: [:light_blue, :bright],
+    text: [:cyan, :normal]
+  ]
+
   def panic(io_list) do
     Mix.Shell.IO.error([:normal, "✘ " | io_list])
     System.halt(1)
@@ -10,7 +20,7 @@ defmodule Aqua.View do
   end
 
   def il(io_list) do
-    [:cyan, :bright, "➤  ", io_list]
+    [:cyan, :bright, "➤  ", :normal, io_list]
   end
 
   def done() do
