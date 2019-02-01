@@ -5,6 +5,9 @@ defmodule Aqua.ProjectParser.None do
 
   alias Aqua.ProjectParser
 
+  @doc """
+  function will return either path to new generated project root, or error that project name is invalid
+  """
   @spec scaffold_pathes(raw_path :: String.t(), app_path :: String.t() | nil) ::
           {:ok, String.t()} | {:error, :bad_project_name}
   def scaffold_pathes(raw_path, _app_path) do

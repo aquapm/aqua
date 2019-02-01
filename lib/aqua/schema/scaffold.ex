@@ -2,7 +2,6 @@ defmodule Aqua.Schema.Scaffold do
   @moduledoc """
 
 
-
   * mix aqua new console my_proj --no-test --force
   """
 
@@ -86,8 +85,8 @@ defmodule Aqua.Schema.Scaffold do
 
   def calculate_pathes(%__MODULE__{raw: raw_path, project_type: :umbrella} = inject) do
     # We are sure, that for umbrella application we have a list of applications (may be empty)
-    case UmbrellaParser.scaffold_path(raw_path, Mix.Project.apps_paths()) do
-      {:ok, {path, project_name}} ->
+    case UmbrellaParser.scaffold_pathes(raw_path, Mix.Project.config()[:apps_path]) do
+      {:ok, {project_name, path}} ->
         inject
         |> Map.put(:path, path)
         |> Map.put(:project_name, project_name)
