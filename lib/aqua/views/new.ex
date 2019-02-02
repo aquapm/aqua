@@ -1,7 +1,8 @@
 defmodule Aqua.Views.New do
   alias Aqua.View
 
-  def panic({:gen, error}) do
+  def panic({:gen, _error}) do
+    # TODO: Use arror with needed verbosity
     View.panic([
       "Fail!\nGenerator faced error during project genration process.\nPlease, ensure:\n\n",
       View.il([:yellow, "Template is not corrupted;\n"]),

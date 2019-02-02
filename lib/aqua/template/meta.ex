@@ -20,7 +20,7 @@ defmodule Aqua.Template.Meta do
   def parse_meta(repo_fs) do
     case File.read(Path.join(repo_fs, "manifest.json")) do
       {:ok, body} ->
-        Aqua.Jason.decode(body)
+        Jason.decode(body)
 
       error ->
         error
@@ -40,7 +40,7 @@ defmodule Aqua.Template.Meta do
 
   def get_template(repo_fs) do
     case parse_meta(repo_fs) do
-      {:ok, %{"files" => files, "options" => options} = template_meta} ->
+      {:ok, %{"files" => _files, "options" => _options} = template_meta} ->
         {:ok, Map.take(template_meta, ["files", "options"])}
 
       _error ->

@@ -103,7 +103,7 @@ defmodule Aqua.Schema.LocalTemplate do
 
   def load_injection(%__MODULE__{fs_path: fs, injection: injection} = lt) do
     case Meta.get_injection(fs, injection) do
-      {:ok, %{"template" => inject_path, "options" => inject_options} = inject} ->
+      {:ok, %{"template" => inject_path, "options" => inject_options} = _inject} ->
         %{lt | injection_path: inject_path, injection_options: inject_options}
 
       error ->
@@ -115,7 +115,7 @@ defmodule Aqua.Schema.LocalTemplate do
 
   def load_template(%__MODULE__{fs_path: fs} = lt) do
     case Meta.get_template(fs) do
-      {:ok, %{"files" => files_data, "options" => template_options} = scaffold} ->
+      {:ok, %{"files" => files_data, "options" => template_options} = _scaffold} ->
         %{lt | template_files_data: files_data, template_options: template_options}
 
       error ->

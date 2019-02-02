@@ -6,12 +6,8 @@ defmodule Aqua.Schema.Scaffold do
   """
 
   alias Aqua.ProjectParser.Umbrella, as: UmbrellaParser
-  alias Aqua.ProjectParser.Flat, as: FlatParser
   alias Aqua.ProjectParser.None, as: NoneParser
 
-  alias Aqua.Cache
-  alias Aqua.Github
-  alias Aqua.Template.Meta
   alias Aqua.Schema.LocalTemplate
 
   defstruct raw: nil,
@@ -166,7 +162,9 @@ defmodule Aqua.Schema.Scaffold do
 
   def generate(%__MODULE__{template: template, path: generate_path, assigns: assigns} = scaffold) do
     case Aqua.Generator.generate_template(generate_path, template, assigns) do
-      {:ok, _} -> scaffold
+      {:ok, _} ->
+        scaffold
+
       {:error, gen_error} ->
         %{scaffold | valid?: {:error, gen_error}}
     end

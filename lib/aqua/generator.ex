@@ -50,7 +50,7 @@ defmodule Aqua.Generator do
     Path.join(generate_path, path_record)
   end
 
-  def get_file_list(%{template_files_data: file_groups} = template, assigns) do
+  def get_file_list(%{template_files_data: file_groups} = _template, assigns) do
     file_groups
     |> Enum.flat_map(fn
       {"base", file_list} ->
@@ -77,7 +77,7 @@ defmodule Aqua.Generator do
     end
   end
 
-  defp generate_dir(path_record, template_path, generate_path, assigns) do
+  defp generate_dir(path_record, _template_path, generate_path, assigns) do
     out_dir_name = evaluate_file_name(path_record, assigns)
     out_dir = out_path(out_dir_name, generate_path)
 

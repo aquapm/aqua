@@ -62,7 +62,7 @@ defmodule Aqua.ProjectParser.Umbrella do
 
       [{app_name, app_path}] ->
         case Path.relative_to(checked_path, app_path)
-             |> ProjectParser.path_part_to_alias(app_name) do
+             |> ProjectParser.path_part_to_alias() do
           {:ok, module_alias} -> {:ok, {checked_path, module_alias}}
           error -> error
         end
