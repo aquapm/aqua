@@ -17,18 +17,18 @@ defmodule Aqua.Tasks.Help do
       " - ",
       "your project scaffolder tool!\n",
       "List of available commands:\n\n",
-      View.il([:light_yellow, :bright, "new", :normal, :cyan, " - generates new project;\n"]),
+      View.il([:green, :bright, "new", :normal, :cyan, " - generates new project;\n"]),
       View.il([
-        :light_yellow,
+        :green,
         :bright,
         "add",
         :normal,
         :cyan,
         " - adds new prefilled file to your project;\n"
       ]),
-      View.il([:light_yellow, :bright, "update", :normal, :cyan, " - updates template caches;\n"]),
+      View.il([:green, :bright, "update", :normal, :cyan, " - updates template caches;\n"]),
       View.il([
-        :light_yellow,
+        :green,
         :bright,
         "list",
         :normal,
