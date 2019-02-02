@@ -32,18 +32,80 @@ All copyrights and notes for this library can be found in it's [license](https:/
 Install it locally as mix archive, using:
 
 ```bash
-mix archive.install hex aqua
+$ mix archive.install hex aqua
 ```
 
 ## Quick-start
 
 Simply run
+```bash
+$ mix aqua
+```
+and follow the instructions :)
+
+
+### To create new project:
+
+* Standalone:
+
+    ```bash
+    $ mix aqua new umbrella my_umbrella
+    ```
+
+    ```bash
+    $ mix aqua new console foo --no-test
+    ```
+
+    ```bash
+    $ mix aqua new otp bar --force
+    ```
+    
+* Inside umbrella - call commands in umbrella's root, not inside `apps` folder:
+
+    ```bash
+    $ mix aqua new umbrella my_umbrella
+    $ cd my_umbrella
+    $ mix aqua new ecto db
+    $ mix aqua new plug server
+    ```
+
+### To add new predefined file:
+
+* Standalone:
+
+    Using alias:
+
+    ```bash
+    $ mix aqua add empty.struct MyApp.Structs.User
+    ```
+
+    Using path:
+    ```bash
+    $ mix aqua add empty.struct ./lib/my_app/structs/post.ex
+    ```
+
+* Inside umbrella:
+
+    Using alias:
+
+    ```bash
+    $ mix aqua add empty.struct MyFapp.Structs.User
+    error: :my_fapp child application is not found
+
+    $ mix aqua add empty.struct MyApp.Structs.User
+    ok...
+    ```
+
+    Using path:
+    ```bash
+    $ mix aqua add empty.struct ./apps/my_app/lib/my_app/structs/post.ex --force
+    ```
+
+### Update template:
 
 ```bash
-mix aqua
+$ mix aqua update plug
 ```
-
-and follow the instructions :)
 
 ## General information
 
