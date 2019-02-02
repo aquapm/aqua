@@ -1,8 +1,6 @@
-defmodule Mix.Tasks.Aqua.List do
-  use Mix.Task
+defmodule Aqua.Tasks.List do
   alias Aqua.Cache
 
-  @shortdoc "List official project templates"
   def run(_) do
     case Cache.official_list do
       {:error, _} -> Cache.update_official_list()

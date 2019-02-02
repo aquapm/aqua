@@ -10,10 +10,5 @@ defmodule Mix.Tasks.Aqua do
   def run(["add" | args]), do: Add.run(args)
   def run(["update" | args]), do: Update.run(args)
   def run(["help" | args]), do: Help.run(args)
-  def run([_ | args]), do: Help.aqua()
-
-  @doc """
-  Task for adding things
-  """
-  def add(), do: :docs
+  def run([_ | _args]), do: Help.aqua()
 end

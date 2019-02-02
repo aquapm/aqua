@@ -13,8 +13,8 @@ defmodule Aqua.MixProject do
       deps: deps(),
       package: package(),
       description: description(),
-      aliases: aliases()
-      # docs: docs()
+      aliases: aliases(),
+      docs: docs()
     ]
   end
 
@@ -46,6 +46,18 @@ defmodule Aqua.MixProject do
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/aquapm/aqua"},
       files: ~w(mix.exs README* CHANGELOG* lib)
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      logo: "extras/logo.png",
+      extras: [
+        "README.md",
+        "extras/Template Creation.md",
+        "extras/Template Injections.md"
+      ]
     ]
   end
 
