@@ -49,7 +49,8 @@ defmodule Aqua.Assigns do
       project_name: project_name,
       project_name_camel_case: Macro.camelize(project_name),
       in_umbrella?: in_umbrella?,
-      elixir_version: System.version(),
+      in_standalone?: not in_umbrella?,
+      elixir_version: Version.parse!(System.version()),
       erlang_version: :erlang.system_info(:version),
       otp_release: :erlang.system_info(:otp_release)
     }
