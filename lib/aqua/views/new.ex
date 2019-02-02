@@ -14,4 +14,12 @@ defmodule Aqua.Views.New do
       "Fail! mix aqua new accepts only one-level project names!\nEnsure your project name is valid"
     ])
   end
+
+  def panic(:template_corrupted) do
+    View.panic([
+      "Fail! Template seems to be corrupted!\nPlease, ensure\n\n",
+      View.il([:yellow, "You are using Aqua's template;\n"]),
+      View.il([:yellow, "Aqua's and Template's versions are matching and are not too old;\n"])
+    ])
+  end
 end
