@@ -149,7 +149,7 @@ Custom templates can be found everywhere, or created by yourself. Read [Document
 **Scaffold** can be created using **new** command. Use:
 
 ```bash
-mix aqua help new
+$ mix aqua help new
 ```
 
 in order to get information about this command. **Args** for the scaffold can be found it it's **Template** documentation
@@ -159,7 +159,7 @@ in order to get information about this command. **Args** for the scaffold can be
 **Inject** can be created using **add** command. Use:
 
 ```bash
-mix aqua help add
+$ mix aqua help add
 ```
 
 in order to get information about this command. **Args** for the scaffold can be found it it's **Template** documentation
