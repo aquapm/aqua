@@ -21,6 +21,7 @@ defmodule Aqua.Cache do
     path = official_list_path()
     File.mkdir(Path.dirname(path))
     File.write(path, :erlang.term_to_binary(data))
+    Mix.Shell.IO.info("\n")
     data
   end
 

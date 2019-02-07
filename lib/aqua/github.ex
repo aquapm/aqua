@@ -1,5 +1,4 @@
 defmodule Aqua.Github do
-  alias Aqua.Schema.LocalRepo
   alias Aqua.Jason
 
   def list_all_official_templates() do
@@ -28,7 +27,7 @@ defmodule Aqua.Github do
   def validate_template(%Aqua.Schema.Template{url: url, name: name} = template) do
     url =
       String.replace(url, "api.github.com/repos", "raw.githubusercontent.com") <>
-        "/master/manifest.yml"
+        "/master/manifest.json"
 
     case :httpc.request(
            :get,
@@ -37,15 +36,18 @@ defmodule Aqua.Github do
            []
          ) do
       {:ok, {_, _, body_char_list}} ->
-        case YamlElixir.read_from_string(body_char_list) do
+        case Jason.decode(body_char_list) do
           {:ok, %{"name" => ^name, "short_desc" => desc}} ->
+            IO.write(IO.ANSI.format([:green, :bright, "✔ "]))
             %{template | short_desc: desc, valid: true}
 
           _ ->
+            IO.write(IO.ANSI.format([:green, :bright, "✘ "]))
             %{template | valid: false}
         end
 
       {:error, _} ->
+        IO.write(IO.ANSI.format([:green, :bright, "✘ "]))
         %{template | valid: false}
     end
   end
@@ -53,5 +55,4 @@ defmodule Aqua.Github do
   def generate_clone_url(user, repo) do
     "git@github.com:#{user}/#{repo}.git"
   end
-
 end

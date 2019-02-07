@@ -115,7 +115,7 @@ $ mix aqua update plug
 Across **Aqua** ecosystems, next terminology is accepted:
 
 * **Template** - repository, properly structured, that contains data that can be used by **Aqua** to generate **Scaffolds** and **Injects**;
-    * **Official template** - no more official then other, but is placed on GitHub under **aquapm** organisation;
+    * **Predefined template** - no more predefined then other, but is placed on GitHub under **aquapm** organisation;
     * **Custome template** - any template, that can be found across entire Internet;
 * **Scaffold** - *full* project files bundle, that is generated in separate folder, and generally is **Mix project**;
 * **Inject** - single file, that in most cases represents **Elixir module**, and can be placed (or *injected*) in any proper place of your **Mix project**;
@@ -134,7 +134,7 @@ Across **Aqua** ecosystems, next terminology is accepted:
 
 **Templates** generally can have information about **Scaffold** and **Injects**, including there configuration and **Args**.
 
-Official templates list can be found under:
+Predefined templates list can be found under:
 
 * **AquaPM** Github organization - [here](https://github.com/aquapm)
 * After calling:
