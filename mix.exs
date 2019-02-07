@@ -2,7 +2,7 @@ defmodule Aqua.MixProject do
   use Mix.Project
 
   @app :aqua
-  @version "0.1.2"
+  @version "0.9.0"
 
   def project do
     [
