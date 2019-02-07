@@ -23,4 +23,8 @@ defmodule Aqua.Views.New do
       View.il([:yellow, "Aqua's and Template's versions are matching and are not too old;\n"])
     ])
   end
+
+  def panic({:git, reason}) do
+    View.panic(["Fail!\n", reason])
+  end
 end

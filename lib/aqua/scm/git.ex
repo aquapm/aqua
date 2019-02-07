@@ -29,11 +29,9 @@ defmodule Aqua.SCM.Git do
 
   @spec decorate_error(error :: {any(), integer()}) :: {:error, any()}
   defp decorate_error({reason, _error_code}) do
-    with nil <- Enum.at(String.split(reason, "ERROR: "), 1),
-         nil <- Enum.at(String.split(reason, "fatal: "), 1) do
-      {:error, reason}
-    else
-      value -> {:error, value}
-    end
+    {:error,
+     String.split(reason, ["ERROR: ", "fatal: "])
+     |> Enum.reverse()
+     |> Enum.at(0)}
   end
 end
