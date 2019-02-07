@@ -1,4 +1,4 @@
-defmodule Aqua.Views.List do
+defmodule Aqua.Views.New do
   alias Aqua.View
 
   def panic({:gen, _error}) do

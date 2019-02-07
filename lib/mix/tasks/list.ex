@@ -1,6 +1,6 @@
 defmodule Aqua.Tasks.List do
   alias Aqua.Cache
-  alias Aqua.Views.New, as: View
+  alias Aqua.Views.List, as: View
 
   def run(_) do
     case Cache.official_list do
