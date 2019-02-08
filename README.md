@@ -1,5 +1,5 @@
 # Aqua
-[![](https://img.shields.io/hexpm/dt/aqua.svg?style=for-the-badge)](https://hex.pm/packages/aqua) [![](https://img.shields.io/hexpm/v/aqua.svg?style=for-the-badge)](https://hex.pm/packages/aqua) [![](https://img.shields.io/hexpm/l/aqua.svg?style=for-the-badge)](https://hex.pm/packages/aqua) [![](https://img.shields.io/github/last-commit/aquapm/aqua.svg?style=for-the-badge)](https://github.com/aquapm/aqua/commits) [![](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](https://github.com/aquapm/aqua)
+[![](https://img.shields.io/hexpm/dt/aqua.svg?style=for-the-badge)](https://hex.pm/packages/aqua) [![](https://img.shields.io/hexpm/v/aqua.svg?style=for-the-badge)](https://hex.pm/packages/aqua) [![](https://img.shields.io/hexpm/l/aqua.svg?style=for-the-badge)](https://hex.pm/packages/aqua) [![](https://img.shields.io/travis/aquapm/aqua.svg?style=for-the-badge)](https://travis-ci.com/aquapm/aqua) [![](https://img.shields.io/github/last-commit/aquapm/aqua.svg?style=for-the-badge)](https://github.com/aquapm/aqua/commits) [![](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](https://github.com/aquapm/aqua)
 
 **Aqua** is general templating and scaffolding solution for **Elixir** projects,
 that helps:
