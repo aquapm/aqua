@@ -26,7 +26,6 @@ defmodule Aqua.Tasks.New do
          |> Scaffold.load_template(template)
          |> Scaffold.generate_assigns(args)
          |> Scaffold.generate()
-         |> IO.inspect()
     do
       %Scaffold{valid?: :ok} -> :ok
       %Scaffold{valid?: {:error, error}} -> View.panic(error)

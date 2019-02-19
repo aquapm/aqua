@@ -1,9 +1,26 @@
 defmodule Aqua.Cache do
   alias Aqua.SCM.Git
 
+  @spec aqua_path() :: binary()
   def aqua_path() do
     System.user_home()
     |> Path.join(".aqua")
+  end
+
+  @spec config_path() :: binary()
+  def config_path() do
+    aqua_path()
+    |> Path.join("config.json")
+  end
+
+  @spec config() :: {:ok, Map.t()}
+  def config() do
+    with {:ok, raw_config} <- File.read(config_path()),
+         {:ok, config} <- Jason.decode(raw_config, keys: :atoms) do
+      {:ok, config}
+    else
+      _ -> {:ok, %{}}
+    end
   end
 
   def official_list() do

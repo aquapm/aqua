@@ -4,7 +4,7 @@ defmodule Aqua.Generator do
   def generate_template(generate_path, template, assigns) do
     with false <- assigns[:force],
          true <- File.exists?(generate_path),
-         false <- Mix.Shell.IO.yes?("⚠  Project already exists. Override?") do
+         false <- Aqua.View.yes?([:red, :bright, "⚠ ", :normal, " Project already exists. Override?"]) do
       {:ok, :success}
     else
       _ ->
