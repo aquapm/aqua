@@ -28,7 +28,12 @@ defmodule Aqua.View do
   end
 
   def yes?(message) do
-    answer = IO.gets(IO.ANSI.format([message, :magenta, :bright, " [Yn] "]))
+    answer = IO.gets(IO.ANSI.format([message, :yellow, :bright, " [Yn] "]))
     is_binary(answer) and String.trim(answer) in ["", "y", "Y", "yes", "YES", "Yes"]
+  end
+
+  def safe_yes?(message) do
+    answer = IO.gets(IO.ANSI.format([message, :yellow, :bright, " [yN] "]))
+    is_binary(answer) and String.trim(answer) in ["y", "Y", "yes", "YES", "Yes"]
   end
 end
