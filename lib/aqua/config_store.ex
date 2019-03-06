@@ -1,11 +1,14 @@
 defmodule Aqua.ConfigStore do
   alias Aqua.Views.ConfigStore, as: View
 
-  @defaults %{
-    test: true,
-    verbose: false,
+  @default_args [
+    %{"name" => "test", "default" => true, "type" => "boolean"},
+    %{"name" => "verbose", "aliases"=> ["v"], "default" => false, "type" => "boolean"},
+    %{"name" => "force", "aliases" => ["f"], "default" => false, "type" => "boolean"},
+    %{"name" => "update", "default" => false, "type" => "boolean"},
+  ]
 
-  }
+  @op_args Aqua.Options.populate_strict(@default_args)
 
   use GenServer
   def start_link(args) do

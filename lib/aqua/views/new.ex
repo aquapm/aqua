@@ -16,6 +16,9 @@ defmodule Aqua.Views.List do
     ])
   end
 
+  @doc """
+  Generates table row for name | description pair
+  """
   def tr(name, desc) do
     [
       :magenta,

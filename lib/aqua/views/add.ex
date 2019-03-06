@@ -84,4 +84,13 @@ defmodule Aqua.Views.Add do
   def panic({:git, reason}) do
     View.panic(["Fail!\n", reason])
   end
+
+
+  def panic(:inject_not_found) do
+    View.panic([
+      "Given inject is not defined!\nPlease ensure:\n\n",
+      View.il([:yellow, "You are calling your inject after right template\n"]),
+      View.il([:yellow, "For current template injection, or its alias, exists.\n"])
+    ])
+  end
 end

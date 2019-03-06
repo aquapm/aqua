@@ -54,7 +54,7 @@ defmodule Aqua.Schema.Scaffold do
   end
 
   @doc """
-  Sets `Scaffold` to invalid, if the value of **project_type** is **:адфе**.
+  Sets `Scaffold` to invalid, if the value of **project_type** is **:flat**.
 
   If the **project_type** value is anything else - pathes the `Inject` struct as is.
   """

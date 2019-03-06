@@ -16,7 +16,7 @@ defmodule Aqua.Cache do
   @spec config() :: {:ok, Map.t()}
   def config() do
     with {:ok, raw_config} <- File.read(config_path()),
-         {:ok, config} <- Jason.decode(raw_config, keys: :atoms) do
+         {:ok, config} <- Aqua.Jason.decode(raw_config, keys: :atoms) do
       {:ok, config}
     else
       _ -> {:ok, %{}}

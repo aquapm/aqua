@@ -9,7 +9,7 @@ defmodule Aqua.Options do
   end
 
   @doc """
-  Function will create OptionParser configuration based on config from Json configuration.
+  Function will create OptionParser configuration based on config from Aqua-ish configuration.
 
   Option parser here:
   [strict: [name: :type, ...], aliases: [t: test, ...], key1: :value1]
