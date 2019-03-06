@@ -6,4 +6,9 @@ defmodule Aqua.Views.Inject do
   end
 
   defdelegate done(), to: View
+
+  # This is fallback for uncoverd problems
+  def panic(problem) do
+    View.panic(inspect(problem))
+  end
 end

@@ -32,4 +32,9 @@ defmodule Aqua.Views.List do
       "\n"
     ]
   end
+
+  # This is fallback for uncoverd problems
+  def panic(problem) do
+    View.panic(inspect(problem))
+  end
 end

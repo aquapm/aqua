@@ -93,4 +93,9 @@ defmodule Aqua.Views.Add do
       View.il([:yellow, "For current template injection, or its alias, exists.\n"])
     ])
   end
+
+  # This is fallback for uncoverd problems
+  def panic(problem) do
+    View.panic(inspect(problem))
+  end
 end
