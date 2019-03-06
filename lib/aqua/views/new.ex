@@ -1,5 +1,5 @@
 defmodule Aqua.Views.List do
-  # alias Aqua.View
+  alias Aqua.View
 
   def list(official, _cached) do
     Mix.Shell.IO.info([
