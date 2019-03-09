@@ -1,3 +1,9 @@
+# 0.9.3
+
+Improvements:
+
+* `mix local.aqua config` command is added. Use to configure local Aqua copy
+
 # 0.9.2
 
 Improvements:

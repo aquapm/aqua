@@ -27,6 +27,10 @@ defmodule Aqua.View do
     Mix.Shell.IO.info([:green, "✔  Done"])
   end
 
+  def success(io_list) do
+    Mix.Shell.IO.info([:green, "✔ ", io_list])
+  end
+
   def yes?(message) do
     answer = IO.gets(IO.ANSI.format([message, :yellow, :bright, " [Yn] "]))
     is_binary(answer) and String.trim(answer) in ["", "y", "Y", "yes", "YES", "Yes"]
