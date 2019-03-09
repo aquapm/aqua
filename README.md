@@ -18,7 +18,7 @@ and also allowes it's users to create there own templates and snippets.
 * [Mix Generator](https://github.com/pragdave/mix_generator)
 * [Mix Templates](https://github.com/pragdave/mix_templates)
 
-while tries to bring some new features, that probably can be usfull for day-by-day coding experience.
+while tries to bring some new features, that probably can be useful for day-by-day coding experience.
 
 Also, because **Aqua** is used as a **Mix** archive, other **Elixir** packages can not be used as it's dependencies.
 
