@@ -6,13 +6,24 @@ defmodule Mix.Tasks.Local.Aqua do
   @moduledoc """
   Local-copy Aqua tasks
 
+  ### Updating local Aqua copy
+
   Example:
       mix local.aqua
+
   This accepts the same command line options as `archive.install`.
+
+  ### Opening Aqua config file
+
+  **NOTE**: `$EDITOR` environment variable should be specified in order to succesfully run the command
+  Example:
+      mix local.aqua config
+
+
   """
 
   @shortdoc "Local-copy Aqua tasks"
-
+  @doc false
   def run(["config" | _args]) do
     case System.get_env("EDITOR") do
       nil ->
