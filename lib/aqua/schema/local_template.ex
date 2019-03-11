@@ -11,6 +11,7 @@ defmodule Aqua.Schema.LocalTemplate do
             injection_options: nil,
             template_files_data: nil,
             template_options: nil,
+            success_message: "",
             git_clone_url: nil,
             git_update?: false,
             fs_path: nil,
@@ -115,8 +116,8 @@ defmodule Aqua.Schema.LocalTemplate do
 
   def load_template(%__MODULE__{fs_path: fs} = lt) do
     case Meta.get_template(fs) do
-      {:ok, %{"files" => files_data, "options" => template_options} = _scaffold} ->
-        %{lt | template_files_data: files_data, template_options: template_options}
+      {:ok, %{"files" => files_data, "options" => template_options} = scaffold} ->
+        %{lt | template_files_data: files_data, template_options: template_options, success_message: Map.get(scaffold, "success_message")}
 
       error ->
         %{lt | valid?: error}

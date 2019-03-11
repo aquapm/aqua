@@ -38,10 +38,13 @@ defmodule Aqua.Template.Meta do
     end)
   end
 
+  @doc """
+  This method returns files and options array for the tamplate
+  """
   def get_template(repo_fs) do
     case parse_meta(repo_fs) do
       {:ok, %{"files" => _files, "options" => _options} = template_meta} ->
-        {:ok, Map.take(template_meta, ["files", "options"])}
+        {:ok, Map.take(template_meta, ["files", "options", "success_message"])}
 
       _error ->
         {:error, :template_corrupted}
