@@ -2,10 +2,15 @@ defmodule Aqua.Assigns.AssignsTest do
   use ExUnit.Case
 
   @global_params_list [
-    :erlixir_version,
+    :elixir_version,
     :erlang_version,
     :otp_release,
     :in_standalone?,
+    :now,
+    :host_os,
+    :in_umbrella?,
+    :project_name,
+    :project_name_camel_case
   ]
 
   describe "global_assigns" do
@@ -22,6 +27,12 @@ defmodule Aqua.Assigns.AssignsTest do
         host_os: ^host_os,
         project_name: ^project_name
       } = Aqua.Assigns.global_assigns(project_name, in_umbrella)
+    end
+
+    test "global assigns returns only and not less then from global params list" do
+      assigns = Aqua.Assigns.global_assigns("project_name", true)
+      assert Map.drop(assigns, @global_params_list) == %{}
+      assert Enum.into(Map.keys(assigns), MapSet.new()) ==  Enum.into(@global_params_list, MapSet.new())
     end
   end
 end
