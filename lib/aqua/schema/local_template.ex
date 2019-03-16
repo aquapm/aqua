@@ -117,7 +117,12 @@ defmodule Aqua.Schema.LocalTemplate do
   def load_template(%__MODULE__{fs_path: fs} = lt) do
     case Meta.get_template(fs) do
       {:ok, %{"files" => files_data, "options" => template_options} = scaffold} ->
-        %{lt | template_files_data: files_data, template_options: template_options, success_message: Map.get(scaffold, "success_message")}
+        %{
+          lt
+          | template_files_data: files_data,
+            template_options: template_options,
+            success_message: Map.get(scaffold, "success_message")
+        }
 
       error ->
         %{lt | valid?: error}

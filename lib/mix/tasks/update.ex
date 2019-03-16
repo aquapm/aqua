@@ -17,8 +17,8 @@ defmodule Aqua.Tasks.Update do
 
   def run([template | _args]) do
     case %LocalTemplate{raw_route: template, git_update?: true}
-    |> LocalTemplate.normalize_route()
-    |> LocalTemplate.sync_repo() do
+         |> LocalTemplate.normalize_route()
+         |> LocalTemplate.sync_repo() do
       %LocalTemplate{valid?: {:error, error}} -> View.panic(error)
       _ -> :ok
     end

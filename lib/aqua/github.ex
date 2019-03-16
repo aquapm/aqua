@@ -12,7 +12,8 @@ defmodule Aqua.Github do
            []
          ) do
       {:ok, {_, _, body_char_list}} ->
-        Jason.decode!(body_char_list)
+        body_char_list
+        |> Jason.decode!()
         |> Enum.map(fn %{"name" => name, "url" => url} ->
           %Aqua.Schema.Template{name: name, url: url}
         end)

@@ -2,13 +2,14 @@ defmodule Aqua.Jason.EncodeError do
   @moduledoc false
   defexception [:message]
 
-  @type t :: %__MODULE__{message: String.t}
+  @type t :: %__MODULE__{message: String.t()}
 
   def new({:duplicate_key, key}) do
     %__MODULE__{message: "duplicate key: #{key}"}
   end
+
   def new({:invalid_byte, byte, original}) do
-    %__MODULE__{message: "invalid byte #{inspect byte, base: :hex} in #{inspect original}"}
+    %__MODULE__{message: "invalid byte #{inspect(byte, base: :hex)} in #{inspect(original)}"}
   end
 end
 
@@ -19,22 +20,24 @@ defmodule Aqua.Jason.Encode do
 
   alias Aqua.Jason.{Codegen, EncodeError, Encoder, Fragment}
 
-  @typep escape :: (String.t, String.t, integer -> iodata)
+  @typep escape :: (String.t(), String.t(), integer -> iodata)
   @typep encode_map :: (map, escape, encode_map -> iodata)
   @opaque opts :: {escape, encode_map}
 
   # @compile :native
 
   @doc false
-  @spec encode(any, map) :: {:ok, iodata} | {:error, EncodeError.t | Exception.t}
+  @spec encode(any, map) :: {:ok, iodata} | {:error, EncodeError.t() | Exception.t()}
   def encode(value, opts) do
     escape = escape_function(opts)
     encode_map = encode_map_function(opts)
+
     try do
       {:ok, value(value, escape, encode_map)}
     catch
       :throw, %EncodeError{} = e ->
         {:error, e}
+
       :error, %Protocol.UndefinedError{protocol: Jason.Encoder} = e ->
         {:error, e}
     end
@@ -113,6 +116,7 @@ defmodule Aqua.Jason.Encode do
   defp encode_atom(nil, _escape), do: "null"
   defp encode_atom(true, _escape), do: "true"
   defp encode_atom(false, _escape), do: "false"
+
   defp encode_atom(atom, escape),
     do: encode_string(Atom.to_string(atom), escape)
 
@@ -136,8 +140,11 @@ defmodule Aqua.Jason.Encode do
   end
 
   defp list([head | tail], escape, encode_map) do
-    [?[, value(head, escape, encode_map)
-     | list_loop(tail, escape, encode_map)]
+    [
+      ?[,
+      value(head, escape, encode_map)
+      | list_loop(tail, escape, encode_map)
+    ]
   end
 
   defp list_loop([], _escape, _encode_map) do
@@ -145,8 +152,11 @@ defmodule Aqua.Jason.Encode do
   end
 
   defp list_loop([head | tail], escape, encode_map) do
-    [?,, value(head, escape, encode_map)
-     | list_loop(tail, escape, encode_map)]
+    [
+      ?,,
+      value(head, escape, encode_map)
+      | list_loop(tail, escape, encode_map)
+    ]
   end
 
   @spec keyword(keyword, opts) :: iodata
@@ -164,14 +174,18 @@ defmodule Aqua.Jason.Encode do
   end
 
   defp map_naive([{key, value} | tail], escape, encode_map) do
-    ["{\"", key(key, escape), "\":",
-    value(value, escape, encode_map)
-    | map_naive_loop(tail, escape, encode_map)]
+    [
+      "{\"",
+      key(key, escape),
+      "\":",
+      value(value, escape, encode_map)
+      | map_naive_loop(tail, escape, encode_map)
+    ]
   end
 
   defp map_naive(value, escape, encode_map) do
     value
-    |> Map.to_list
+    |> Map.to_list()
     |> map_naive(escape, encode_map)
   end
 
@@ -180,9 +194,13 @@ defmodule Aqua.Jason.Encode do
   end
 
   defp map_naive_loop([{key, value} | tail], escape, encode_map) do
-    [",\"", key(key, escape), "\":",
-     value(value, escape, encode_map)
-     | map_naive_loop(tail, escape, encode_map)]
+    [
+      ",\"",
+      key(key, escape),
+      "\":",
+      value(value, escape, encode_map)
+      | map_naive_loop(tail, escape, encode_map)
+    ]
   end
 
   defp map_strict([], _escape, _encode_map) do
@@ -192,14 +210,19 @@ defmodule Aqua.Jason.Encode do
   defp map_strict([{key, value} | tail], escape, encode_map) do
     key = IO.iodata_to_binary(key(key, escape))
     visited = %{key => []}
-    ["{\"", key, "\":",
-     value(value, escape, encode_map)
-     | map_strict_loop(tail, escape, encode_map, visited)]
+
+    [
+      "{\"",
+      key,
+      "\":",
+      value(value, escape, encode_map)
+      | map_strict_loop(tail, escape, encode_map, visited)
+    ]
   end
 
   defp map_strict(value, escape, encode_map) do
     value
-    |> Map.to_list
+    |> Map.to_list()
     |> map_strict(escape, encode_map)
   end
 
@@ -209,14 +232,21 @@ defmodule Aqua.Jason.Encode do
 
   defp map_strict_loop([{key, value} | tail], escape, encode_map, visited) do
     key = IO.iodata_to_binary(key(key, escape))
+
     case visited do
       %{^key => _} ->
         error({:duplicate_key, key})
+
       _ ->
         visited = Map.put(visited, key, [])
-        [",\"", key, "\":",
-         value(value, escape, encode_map)
-         | map_strict_loop(tail, escape, encode_map, visited)]
+
+        [
+          ",\"",
+          key,
+          "\":",
+          value(value, escape, encode_map)
+          | map_strict_loop(tail, escape, encode_map, visited)
+        ]
     end
   end
 
@@ -252,16 +282,18 @@ defmodule Aqua.Jason.Encode do
   def key(string, escape) when is_binary(string) do
     escape.(string, string, 0)
   end
+
   def key(atom, escape) when is_atom(atom) do
     string = Atom.to_string(atom)
     escape.(string, string, 0)
   end
+
   def key(other, escape) do
     string = String.Chars.to_string(other)
     escape.(string, string, 0)
   end
 
-  @spec string(String.t, opts) :: iodata
+  @spec string(String.t(), opts) :: iodata
   def string(string, {escape, _encode_map}) do
     encode_string(string, escape)
   end
@@ -280,8 +312,10 @@ defmodule Aqua.Jason.Encode do
     {byte, :unicode} ->
       sequence = List.to_string(:io_lib.format("\\u~4.16.0B", [byte]))
       defp escape(unquote(byte)), do: unquote(sequence)
+
     {byte, char} when is_integer(char) ->
       defp escape(unquote(byte)), do: unquote(<<?\\, char>>)
+
     {byte, :error} ->
       defp escape(unquote(byte)), do: throw(:error)
   end)
@@ -300,6 +334,7 @@ defmodule Aqua.Jason.Encode do
            when byte === unquote(byte) do
         escape_json_chunk(rest, acc, original, skip, 1)
       end
+
     {byte, _escape} ->
       defp escape_json(<<byte, rest::bits>>, acc, original, skip)
            when byte === unquote(byte) do
@@ -307,20 +342,25 @@ defmodule Aqua.Jason.Encode do
         escape_json(rest, acc, original, skip + 1)
       end
   end)
+
   defp escape_json(<<char::utf8, rest::bits>>, acc, original, skip)
        when char <= 0x7FF do
     escape_json_chunk(rest, acc, original, skip, 2)
   end
+
   defp escape_json(<<char::utf8, rest::bits>>, acc, original, skip)
        when char <= 0xFFFF do
     escape_json_chunk(rest, acc, original, skip, 3)
   end
+
   defp escape_json(<<_char::utf8, rest::bits>>, acc, original, skip) do
     escape_json_chunk(rest, acc, original, skip, 4)
   end
+
   defp escape_json(<<>>, acc, _original, _skip) do
     acc
   end
+
   defp escape_json(<<byte, _rest::bits>>, _acc, original, _skip) do
     error({:invalid_byte, byte, original})
   end
@@ -331,6 +371,7 @@ defmodule Aqua.Jason.Encode do
            when byte === unquote(byte) do
         escape_json_chunk(rest, acc, original, skip, len + 1)
       end
+
     {byte, _escape} ->
       defp escape_json_chunk(<<byte, rest::bits>>, acc, original, skip, len)
            when byte === unquote(byte) do
@@ -339,21 +380,26 @@ defmodule Aqua.Jason.Encode do
         escape_json(rest, acc, original, skip + len + 1)
       end
   end)
+
   defp escape_json_chunk(<<char::utf8, rest::bits>>, acc, original, skip, len)
        when char <= 0x7FF do
     escape_json_chunk(rest, acc, original, skip, len + 2)
   end
+
   defp escape_json_chunk(<<char::utf8, rest::bits>>, acc, original, skip, len)
        when char <= 0xFFFF do
     escape_json_chunk(rest, acc, original, skip, len + 3)
   end
+
   defp escape_json_chunk(<<_char::utf8, rest::bits>>, acc, original, skip, len) do
     escape_json_chunk(rest, acc, original, skip, len + 4)
   end
+
   defp escape_json_chunk(<<>>, acc, original, skip, len) do
     part = binary_part(original, skip, len)
     [acc | part]
   end
+
   defp escape_json_chunk(<<byte, _rest::bits>>, _acc, original, _skip, _len) do
     error({:invalid_byte, byte, original})
   end
@@ -367,36 +413,43 @@ defmodule Aqua.Jason.Encode do
   Enum.map(json_jt, fn
     {byte, :chunk} ->
       defp escape_javascript(<<byte, rest::bits>>, acc, original, skip)
-            when byte === unquote(byte) do
+           when byte === unquote(byte) do
         escape_javascript_chunk(rest, acc, original, skip, 1)
       end
+
     {byte, _escape} ->
       defp escape_javascript(<<byte, rest::bits>>, acc, original, skip)
-            when byte === unquote(byte) do
+           when byte === unquote(byte) do
         acc = [acc | escape(byte)]
         escape_javascript(rest, acc, original, skip + 1)
       end
   end)
+
   defp escape_javascript(<<char::utf8, rest::bits>>, acc, original, skip)
-        when char <= 0x7FF do
+       when char <= 0x7FF do
     escape_javascript_chunk(rest, acc, original, skip, 2)
   end
+
   Enum.map(surogate_escapes, fn {byte, escape} ->
     defp escape_javascript(<<unquote(byte)::utf8, rest::bits>>, acc, original, skip) do
       acc = [acc | unquote(escape)]
       escape_javascript(rest, acc, original, skip + 3)
     end
   end)
+
   defp escape_javascript(<<char::utf8, rest::bits>>, acc, original, skip)
-        when char <= 0xFFFF do
+       when char <= 0xFFFF do
     escape_javascript_chunk(rest, acc, original, skip, 3)
   end
+
   defp escape_javascript(<<_char::utf8, rest::bits>>, acc, original, skip) do
     escape_javascript_chunk(rest, acc, original, skip, 4)
   end
+
   defp escape_javascript(<<>>, acc, _original, _skip) do
     acc
   end
+
   defp escape_javascript(<<byte, _rest::bits>>, _acc, original, _skip) do
     error({:invalid_byte, byte, original})
   end
@@ -404,21 +457,24 @@ defmodule Aqua.Jason.Encode do
   Enum.map(json_jt, fn
     {byte, :chunk} ->
       defp escape_javascript_chunk(<<byte, rest::bits>>, acc, original, skip, len)
-            when byte === unquote(byte) do
+           when byte === unquote(byte) do
         escape_javascript_chunk(rest, acc, original, skip, len + 1)
       end
+
     {byte, _escape} ->
       defp escape_javascript_chunk(<<byte, rest::bits>>, acc, original, skip, len)
-            when byte === unquote(byte) do
+           when byte === unquote(byte) do
         part = binary_part(original, skip, len)
         acc = [acc, part | escape(byte)]
         escape_javascript(rest, acc, original, skip + len + 1)
       end
   end)
+
   defp escape_javascript_chunk(<<char::utf8, rest::bits>>, acc, original, skip, len)
-        when char <= 0x7FF do
+       when char <= 0x7FF do
     escape_javascript_chunk(rest, acc, original, skip, len + 2)
   end
+
   Enum.map(surogate_escapes, fn {byte, escape} ->
     defp escape_javascript_chunk(<<unquote(byte)::utf8, rest::bits>>, acc, original, skip, len) do
       part = binary_part(original, skip, len)
@@ -426,17 +482,21 @@ defmodule Aqua.Jason.Encode do
       escape_javascript(rest, acc, original, skip + len + 3)
     end
   end)
+
   defp escape_javascript_chunk(<<char::utf8, rest::bits>>, acc, original, skip, len)
-        when char <= 0xFFFF do
+       when char <= 0xFFFF do
     escape_javascript_chunk(rest, acc, original, skip, len + 3)
   end
+
   defp escape_javascript_chunk(<<_char::utf8, rest::bits>>, acc, original, skip, len) do
     escape_javascript_chunk(rest, acc, original, skip, len + 4)
   end
+
   defp escape_javascript_chunk(<<>>, acc, original, skip, len) do
     part = binary_part(original, skip, len)
     [acc | part]
   end
+
   defp escape_javascript_chunk(<<byte, _rest::bits>>, _acc, original, _skip, _len) do
     error({:invalid_byte, byte, original})
   end
@@ -452,36 +512,43 @@ defmodule Aqua.Jason.Encode do
   Enum.map(html_jt, fn
     {byte, :chunk} ->
       defp escape_html(<<byte, rest::bits>>, acc, original, skip)
-            when byte === unquote(byte) do
+           when byte === unquote(byte) do
         escape_html_chunk(rest, acc, original, skip, 1)
       end
+
     {byte, _escape} ->
       defp escape_html(<<byte, rest::bits>>, acc, original, skip)
-            when byte === unquote(byte) do
+           when byte === unquote(byte) do
         acc = [acc | escape(byte)]
         escape_html(rest, acc, original, skip + 1)
       end
   end)
+
   defp escape_html(<<char::utf8, rest::bits>>, acc, original, skip)
-        when char <= 0x7FF do
+       when char <= 0x7FF do
     escape_html_chunk(rest, acc, original, skip, 2)
   end
+
   Enum.map(surogate_escapes, fn {byte, escape} ->
     defp escape_html(<<unquote(byte)::utf8, rest::bits>>, acc, original, skip) do
       acc = [acc | unquote(escape)]
       escape_html(rest, acc, original, skip + 3)
     end
   end)
+
   defp escape_html(<<char::utf8, rest::bits>>, acc, original, skip)
-        when char <= 0xFFFF do
+       when char <= 0xFFFF do
     escape_html_chunk(rest, acc, original, skip, 3)
   end
+
   defp escape_html(<<_char::utf8, rest::bits>>, acc, original, skip) do
     escape_html_chunk(rest, acc, original, skip, 4)
   end
+
   defp escape_html(<<>>, acc, _original, _skip) do
     acc
   end
+
   defp escape_html(<<byte, _rest::bits>>, _acc, original, _skip) do
     error({:invalid_byte, byte, original})
   end
@@ -489,21 +556,24 @@ defmodule Aqua.Jason.Encode do
   Enum.map(html_jt, fn
     {byte, :chunk} ->
       defp escape_html_chunk(<<byte, rest::bits>>, acc, original, skip, len)
-            when byte === unquote(byte) do
+           when byte === unquote(byte) do
         escape_html_chunk(rest, acc, original, skip, len + 1)
       end
+
     {byte, _escape} ->
       defp escape_html_chunk(<<byte, rest::bits>>, acc, original, skip, len)
-            when byte === unquote(byte) do
+           when byte === unquote(byte) do
         part = binary_part(original, skip, len)
         acc = [acc, part | escape(byte)]
         escape_html(rest, acc, original, skip + len + 1)
       end
   end)
+
   defp escape_html_chunk(<<char::utf8, rest::bits>>, acc, original, skip, len)
-        when char <= 0x7FF do
+       when char <= 0x7FF do
     escape_html_chunk(rest, acc, original, skip, len + 2)
   end
+
   Enum.map(surogate_escapes, fn {byte, escape} ->
     defp escape_html_chunk(<<unquote(byte)::utf8, rest::bits>>, acc, original, skip, len) do
       part = binary_part(original, skip, len)
@@ -511,17 +581,21 @@ defmodule Aqua.Jason.Encode do
       escape_html(rest, acc, original, skip + len + 3)
     end
   end)
+
   defp escape_html_chunk(<<char::utf8, rest::bits>>, acc, original, skip, len)
-        when char <= 0xFFFF do
+       when char <= 0xFFFF do
     escape_html_chunk(rest, acc, original, skip, len + 3)
   end
+
   defp escape_html_chunk(<<_char::utf8, rest::bits>>, acc, original, skip, len) do
     escape_html_chunk(rest, acc, original, skip, len + 4)
   end
+
   defp escape_html_chunk(<<>>, acc, original, skip, len) do
     part = binary_part(original, skip, len)
     [acc | part]
   end
+
   defp escape_html_chunk(<<byte, _rest::bits>>, _acc, original, _skip, _len) do
     error({:invalid_byte, byte, original})
   end
@@ -538,6 +612,7 @@ defmodule Aqua.Jason.Encode do
            when byte === unquote(byte) do
         escape_unicode_chunk(rest, acc, original, skip, 1)
       end
+
     {byte, _escape} ->
       defp escape_unicode(<<byte, rest::bits>>, acc, original, skip)
            when byte === unquote(byte) do
@@ -545,39 +620,48 @@ defmodule Aqua.Jason.Encode do
         escape_unicode(rest, acc, original, skip + 1)
       end
   end)
+
   defp escape_unicode(<<char::utf8, rest::bits>>, acc, original, skip)
        when char <= 0xFF do
     acc = [acc, "\\u00" | Integer.to_string(char, 16)]
     escape_unicode(rest, acc, original, skip + 2)
   end
+
   defp escape_unicode(<<char::utf8, rest::bits>>, acc, original, skip)
-        when char <= 0x7FF do
+       when char <= 0x7FF do
     acc = [acc, "\\u0" | Integer.to_string(char, 16)]
     escape_unicode(rest, acc, original, skip + 2)
   end
+
   defp escape_unicode(<<char::utf8, rest::bits>>, acc, original, skip)
-        when char <= 0xFFF do
+       when char <= 0xFFF do
     acc = [acc, "\\u0" | Integer.to_string(char, 16)]
     escape_unicode(rest, acc, original, skip + 3)
   end
+
   defp escape_unicode(<<char::utf8, rest::bits>>, acc, original, skip)
-        when char <= 0xFFFF do
+       when char <= 0xFFFF do
     acc = [acc, "\\u" | Integer.to_string(char, 16)]
     escape_unicode(rest, acc, original, skip + 3)
   end
+
   defp escape_unicode(<<char::utf8, rest::bits>>, acc, original, skip) do
     char = char - 0x10000
-    acc =
-      [
-        acc,
-        "\\uD", Integer.to_string(0x800 ||| (char >>> 10), 16),
-        "\\uD" | Integer.to_string(0xC00 ||| (char &&& 0x3FF), 16)
-      ]
+
+    acc = [
+      acc,
+      "\\uD",
+      Integer.to_string(0x800 ||| char >>> 10, 16),
+      "\\uD" | Integer.to_string(0xC00 ||| (char &&& 0x3FF), 16)
+    ]
+
     escape_unicode(rest, acc, original, skip + 4)
   end
+
   defp escape_unicode(<<>>, acc, _original, _skip) do
     acc
   end
+
   defp escape_unicode(<<byte, _rest::bits>>, _acc, original, _skip) do
     error({:invalid_byte, byte, original})
   end
@@ -585,62 +669,73 @@ defmodule Aqua.Jason.Encode do
   Enum.map(json_jt, fn
     {byte, :chunk} ->
       defp escape_unicode_chunk(<<byte, rest::bits>>, acc, original, skip, len)
-            when byte === unquote(byte) do
+           when byte === unquote(byte) do
         escape_unicode_chunk(rest, acc, original, skip, len + 1)
       end
+
     {byte, _escape} ->
       defp escape_unicode_chunk(<<byte, rest::bits>>, acc, original, skip, len)
-            when byte === unquote(byte) do
+           when byte === unquote(byte) do
         part = binary_part(original, skip, len)
         acc = [acc, part | escape(byte)]
         escape_unicode(rest, acc, original, skip + len + 1)
       end
   end)
+
   defp escape_unicode_chunk(<<char::utf8, rest::bits>>, acc, original, skip, len)
        when char <= 0xFF do
     part = binary_part(original, skip, len)
     acc = [acc, part, "\\u00" | Integer.to_string(char, 16)]
     escape_unicode(rest, acc, original, skip + len + 2)
   end
+
   defp escape_unicode_chunk(<<char::utf8, rest::bits>>, acc, original, skip, len)
-        when char <= 0x7FF do
+       when char <= 0x7FF do
     part = binary_part(original, skip, len)
     acc = [acc, part, "\\u0" | Integer.to_string(char, 16)]
     escape_unicode(rest, acc, original, skip + len + 2)
   end
+
   defp escape_unicode_chunk(<<char::utf8, rest::bits>>, acc, original, skip, len)
-        when char <= 0xFFF do
+       when char <= 0xFFF do
     part = binary_part(original, skip, len)
     acc = [acc, part, "\\u0" | Integer.to_string(char, 16)]
     escape_unicode(rest, acc, original, skip + len + 3)
   end
+
   defp escape_unicode_chunk(<<char::utf8, rest::bits>>, acc, original, skip, len)
-        when char <= 0xFFFF do
+       when char <= 0xFFFF do
     part = binary_part(original, skip, len)
     acc = [acc, part, "\\u" | Integer.to_string(char, 16)]
     escape_unicode(rest, acc, original, skip + len + 3)
   end
+
   defp escape_unicode_chunk(<<char::utf8, rest::bits>>, acc, original, skip, len) do
     char = char - 0x10000
     part = binary_part(original, skip, len)
-    acc =
-      [
-        acc, part,
-        "\\uD", Integer.to_string(0x800 ||| (char >>> 10), 16),
-        "\\uD" | Integer.to_string(0xC00 ||| (char &&& 0x3FF), 16)
-      ]
+
+    acc = [
+      acc,
+      part,
+      "\\uD",
+      Integer.to_string(0x800 ||| char >>> 10, 16),
+      "\\uD" | Integer.to_string(0xC00 ||| (char &&& 0x3FF), 16)
+    ]
+
     escape_unicode(rest, acc, original, skip + len + 4)
   end
+
   defp escape_unicode_chunk(<<>>, acc, original, skip, len) do
     part = binary_part(original, skip, len)
     [acc | part]
   end
+
   defp escape_unicode_chunk(<<byte, _rest::bits>>, _acc, original, _skip, _len) do
     error({:invalid_byte, byte, original})
   end
 
   @compile {:inline, error: 1}
   defp error(error) do
-    throw EncodeError.new(error)
+    throw(EncodeError.new(error))
   end
 end

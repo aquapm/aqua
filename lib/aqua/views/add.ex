@@ -85,7 +85,6 @@ defmodule Aqua.Views.Add do
     View.panic(["Fail!\n", reason])
   end
 
-
   def panic(:inject_not_found) do
     View.panic([
       "Given inject is not defined!\nPlease ensure:\n\n",

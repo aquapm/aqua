@@ -10,7 +10,8 @@ defmodule Aqua.Config.CommonArgsTest do
 
   describe "CommonArgs Collectable protocol" do
     test "Successfully adopts valid values" do
-      assert %CommonArgs{test: false, verbose: true, force: true, update: true} == Enum.into([test: false, verbose: true, force: true, update: true], %CommonArgs{})
+      assert %CommonArgs{test: false, verbose: true, force: true, update: true} ==
+               Enum.into([test: false, verbose: true, force: true, update: true], %CommonArgs{})
     end
 
     test "Fails with invalid params" do
@@ -20,7 +21,8 @@ defmodule Aqua.Config.CommonArgsTest do
     end
 
     test "Adopts empty enumerbale with default values" do
-      assert %CommonArgs{test: true, verbose: false, force: false, update: false} == Enum.into([], %CommonArgs{})
+      assert %CommonArgs{test: true, verbose: false, force: false, update: false} ==
+               Enum.into([], %CommonArgs{})
     end
   end
 
@@ -30,15 +32,18 @@ defmodule Aqua.Config.CommonArgsTest do
     end
 
     test "it accepts valid params" do
-      assert %CommonArgs{test: false, verbose: true, force: true, update: true} == CommonArgs.parse(["--no-test", "--verbose", "--force", "--update"])
+      assert %CommonArgs{test: false, verbose: true, force: true, update: true} ==
+               CommonArgs.parse(["--no-test", "--verbose", "--force", "--update"])
     end
 
     test "it skips invalid params" do
-      assert %CommonArgs{test: false, verbose: true, force: true, update: true} == CommonArgs.parse(["--no-test", "--verbose", "--force", "--update", "--bad-params"])
+      assert %CommonArgs{test: false, verbose: true, force: true, update: true} ==
+               CommonArgs.parse(["--no-test", "--verbose", "--force", "--update", "--bad-params"])
     end
 
     test "it accepts aliases" do
-      assert %CommonArgs{test: false, verbose: true, force: true, update: true} == CommonArgs.parse(["--no-test", "-V", "-F", "-U"])
+      assert %CommonArgs{test: false, verbose: true, force: true, update: true} ==
+               CommonArgs.parse(["--no-test", "-V", "-F", "-U"])
     end
   end
 end

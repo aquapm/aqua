@@ -3,7 +3,7 @@ defmodule Aqua.Tasks.List do
   alias Aqua.Views.List, as: View
 
   def run(_) do
-    case Cache.official_list do
+    case Cache.official_list() do
       {:error, _} -> Cache.update_official_list()
       {:ok, data} -> data
     end

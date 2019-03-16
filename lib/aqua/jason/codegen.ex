@@ -93,11 +93,11 @@ defmodule Aqua.Jason.Codegen do
       ranges
       |> jump_table(default)
       |> Enum.flat_map(fn {byte_value, action} ->
-           quote do
-             <<unquote(byte_value), unquote(rest)::bits>> ->
-               unquote(action)
-           end
-         end)
+        quote do
+          <<unquote(byte_value), unquote(rest)::bits>> ->
+            unquote(action)
+        end
+      end)
 
     clauses = clauses ++ quote(do: (<<>> -> empty_error(original, skip)))
 
@@ -113,12 +113,12 @@ defmodule Aqua.Jason.Codegen do
   defp ranges_to_orddict(ranges) do
     ranges
     |> Enum.flat_map(fn
-         {int, value} when is_integer(int) ->
-           [{int, value}]
+      {int, value} when is_integer(int) ->
+        [{int, value}]
 
-         {enum, value} ->
-           Enum.map(enum, &{&1, value})
-       end)
+      {enum, value} ->
+        Enum.map(enum, &{&1, value})
+    end)
     |> :orddict.from_list()
   end
 

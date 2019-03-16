@@ -25,8 +25,7 @@ defmodule Aqua.Tasks.New do
          |> Scaffold.calculate_pathes()
          |> Scaffold.load_template(template)
          |> Scaffold.generate_assigns(args)
-         |> Scaffold.generate()
-    do
+         |> Scaffold.generate() do
       %Scaffold{valid?: :ok} -> :ok
       %Scaffold{valid?: {:error, error}} -> View.panic(error)
     end

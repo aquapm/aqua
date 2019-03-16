@@ -174,7 +174,8 @@ defmodule Aqua.Schema.Inject do
 
       with false <- assigns[:force],
            true <- File.exists?(to_path),
-           false <- Aqua.View.safe_yes?([:red, :bright, "⚠ ", :normal, " File already exists. Override?"]) do
+           false <-
+             Aqua.View.safe_yes?([:red, :bright, "⚠ ", :normal, " File already exists. Override?"]) do
         inject
       else
         _ ->
