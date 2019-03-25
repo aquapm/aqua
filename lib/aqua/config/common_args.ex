@@ -24,7 +24,11 @@ defmodule Aqua.Config.CommonArgs do
   end
 
   @doc """
+  Produces `Aqua.Config.CommonArgs` from passed argumrents.
 
+  Arguments that are not presented - skiped
+  Arguments to be parse - parsed
+  Arguments that are not in the common args list omited
   """
   @spec parse(args_list :: list(String.t())) :: __MODULE__.t()
   def parse(args_list) do

@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Aqua do
   use Mix.Task
 
-  alias Aqua.Tasks.{New, Help, Add, Update, List}
+  alias Aqua.Tasks.{New, Help, Add, Update, List, Cli}
 
   @doc false
   @spec run(list(String.t())) :: any()
@@ -10,6 +10,8 @@ defmodule Mix.Tasks.Aqua do
   def run(["add" | args]), do: Add.run(args)
   def run(["update" | args]), do: Update.run(args)
   def run(["list" | args]), do: List.run(args)
+  def run(["cli" | args]), do: Cli.run(args)
+
   def run(["help" | args]), do: Help.run(args)
   def run([_ | _args]), do: Help.aqua()
 end
