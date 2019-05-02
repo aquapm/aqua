@@ -28,6 +28,18 @@ defmodule Aqua.Views.Local do
     ])
   end
 
+  def panic({:edit_failed, exit_status}) do
+    View.panic([
+      "Editor didn't exit normally, but crashed with status: ",
+      :bright,
+      :yellow,
+      "#{exit_status}",
+      :normal,
+      :red,
+      ".\n  Please, recheck that new configuration was saved right!"
+    ])
+  end
+
   # This is fallback for uncoverd problems
   def panic(io_list) do
     View.panic(io_list)
