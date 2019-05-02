@@ -27,7 +27,7 @@ defmodule Mix.Tasks.Local.Aqua do
   def run(["config" | _args]) do
     with {:ok, editor_command} <- Editor.ensure_environment_specified(),
          {:ok, {editor_path, args}} <- Editor.get_editor(editor_command),
-         {:ok, _} <- Editor.run(editor_path, args) do
+         {:ok, _} <- Editor.run(editor_path, args, Aqua.Config.path()) do
       {:ok, :success}
     else
       {:error, :not_defined} -> View.panic(:editor_not_defined)

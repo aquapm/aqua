@@ -18,11 +18,15 @@ defmodule Aqua.Editor do
     end
   end
 
-  @spec run(String.t(), [String.t()]) :: {:error, {:edit_failed, integer}} | {:ok, :success}
-  def run(editor_path, args) do
+  @spec run(editor_path :: String.t(), args :: [String.t()], filepath :: String.t()) :: {:error, {:edit_failed, integer}} | {:ok, :success}
+  def run(editor_path, args, filepath) do
+    # ensuring the folder exists
+
+    File.mkdir_p!(Path.dirname(filepath))
+
     port =
       :erlang.open_port({:spawn_executable, String.trim(editor_path)}, [
-        {:args, args ++ [Aqua.Cache.config_path()]},
+        {:args, args ++ [filepath]},
         :exit_status,
         :nouse_stdio
       ])
