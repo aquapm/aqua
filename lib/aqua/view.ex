@@ -15,6 +15,12 @@ defmodule Aqua.View do
     System.halt(1)
   end
 
+  @spec die(iodata :: iodata) :: no_return()
+  def die(iodata) do
+    IO.write(IO.ANSI.format(iodata))
+    System.halt(1)
+  end
+
   def inline(io_list) do
     IO.write(IO.ANSI.format(io_list))
   end

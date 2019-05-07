@@ -14,6 +14,6 @@ defmodule Aqua.Constants do
   """
   @spec config_filename() :: String.t()
   def config_filename do
-    "config.json"
+    ".aquaconfig"
   end
 end

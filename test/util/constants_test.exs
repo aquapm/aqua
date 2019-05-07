@@ -8,6 +8,6 @@ defmodule Aqua.Util.ConstantsTest do
   end
 
   test "config filename is defined" do
-    assert "config.json" = Subj.config_filename()
+    assert ".aquaconfig" = Subj.config_filename()
   end
 end
