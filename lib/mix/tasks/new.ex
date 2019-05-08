@@ -3,8 +3,8 @@ defmodule Aqua.Tasks.New do
   alias Aqua.Views.New, as: View
   alias Aqua.Tasks.Help
 
-  def run([template | [name | args]]) do
-    case %Scaffold{raw: name}
+  def run([template | [path | args]]) do
+    case %Scaffold{raw: path}
          |> Scaffold.set_project_type()
          |> Scaffold.assert_not_in_flat_project()
          |> Scaffold.calculate_pathes()

@@ -47,9 +47,11 @@ defmodule Aqua.Cli do
   """
   @spec which(executable :: String.t()) :: {:ok, absolute_path :: String.t} | {:error, :not_found}
   def which(executable) do
-    case System.cmd("which", [executable]) do
-      {path, 0} -> {:ok, Path.expand(String.trim(path))}
-      {_, 1} -> {:error, :not_found}
+    case :os.type() do
+      {:unix, _} ->
+        Aqua.Cli.Unix.which(executable)
+      {:win32, _} ->
+        Aqua.Cli.Win.which(executable)
     end
   end
 end

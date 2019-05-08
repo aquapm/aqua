@@ -1,4 +1,7 @@
 defmodule Aqua.Editor do
+  @doc """
+  Check that `$EDITOR` environment variable specified for the run.
+  """
   @spec ensure_environment_specified() :: {:error, :not_defined} | {:ok, String.t()}
   def ensure_environment_specified do
     case System.get_env("EDITOR") do
@@ -7,6 +10,10 @@ defmodule Aqua.Editor do
     end
   end
 
+  @doc """
+  Parses "editor with args" command in order to find absolute path to the editor.
+  If editor is not found - raises an error
+  """
   @spec get_editor(editor_command :: String.t()) ::
           {:error, :not_found} | {:ok, {String.t(), [String.t()]}}
   def get_editor(editor_command) do
