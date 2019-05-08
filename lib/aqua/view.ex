@@ -2,13 +2,17 @@ defmodule Aqua.View do
   @spec panic(any()) :: no_return()
 
   # TODO: Set these colors everywhere where needed. Issue #3
-  # @colors [
-  #   elixir: [:magenta, :bright],
-  #   bash: [:light_yellow, :bright],
-  #   fs: [:yellow, :bright],
-  #   aqua: [:light_blue, :bright],
-  #   text: [:cyan, :normal]
-  # ]
+  @colors %{
+    elixir: [:magenta, :bright],
+    bash: [:light_yellow, :bright],
+    fs: [:yellow, :bright],
+    aqua: [:light_blue, :bright],
+    text: [:cyan, :normal]
+  }
+
+  def of_type(text, color \\ :text) do
+    [Map.get(@colors, color, Map.get(@colors, :text)), text]
+  end
 
   def panic(io_list) do
     Mix.Shell.IO.error([:normal, "✘ " | io_list])
