@@ -47,7 +47,8 @@ defmodule Aqua.MixProject do
   defp aliases() do
     [
       build: [&build_releases/1],
-      reinstall: ["build", &reinstall_archive/1]
+      reinstall: ["build", &reinstall_archive/1],
+      uninstall: [&uninstall_archive/1]
     ]
   end
 
@@ -78,6 +79,10 @@ defmodule Aqua.MixProject do
     Mix.Tasks.Compile.run([])
     Mix.Tasks.Archive.Build.run(["--output=./#{@app}-archive/#{@app}-#{@version}.ez"])
     File.cp("./#{@app}-archive/#{@app}-#{@version}.ez", "./#{@app}-archive/#{@app}.ez")
+  end
+
+  def uninstall_archive(_) do
+    Mix.Tasks.Archive.Uninstall.run(["aqua-#{@version}", "--force"])
   end
 
   defp reinstall_archive(_) do

@@ -28,32 +28,6 @@ defmodule Aqua.Schema.Scaffold do
         }
 
   @doc """
-  Identifies the type of a project, on which the `mix aqua` command is called.
-  Set the valuse inside `Inject` structure under **project_type**.
-
-  Project structure can be:
-
-  * **:none** - we are not inside the project;
-  * **:flat** - we are inside flat *[common]* project;
-  * **:umbrella** - we are inside **umbrella** project;
-  """
-  @spec set_project_type(inject :: __MODULE__.t()) :: __MODULE__.t()
-  def set_project_type(%__MODULE__{valid?: {:error, _}} = scaffold), do: scaffold
-
-  def set_project_type(%__MODULE__{} = scaffold) do
-    case Mix.Project.umbrella?() do
-      false ->
-        case Mix.Project.get() do
-          nil -> Map.put(scaffold, :project_type, :none)
-          _ -> Map.put(scaffold, :project_type, :flat)
-        end
-
-      true ->
-        Map.put(scaffold, :project_type, :umbrella)
-    end
-  end
-
-  @doc """
   Sets `Scaffold` to invalid, if the value of **project_type** is **:flat**.
 
   If the **project_type** value is anything else - pathes the `Inject` struct as is.

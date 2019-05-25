@@ -5,6 +5,8 @@ defmodule Aqua.Render.Terms do
     fs: [:yellow, :bright],
     aqua: [:light_blue, :bright],
     text: [:cyan, :normal],
+    text_highlight: [:light_cyan, :bright],
+    initial: [:green, :bright],
     error: [:red, :normal],
     error_highlight: [:red, :bright],
     success: [:green, :normal]
