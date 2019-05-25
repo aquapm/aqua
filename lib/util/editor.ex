@@ -25,25 +25,29 @@ defmodule Aqua.Editor do
     end
   end
 
-  @spec run(editor_path :: String.t(), args :: [String.t()], filepath :: String.t()) :: {:error, {:edit_failed, integer}} | {:ok, :success}
+  @spec run(editor_path :: String.t(), args :: [String.t()], filepath :: String.t()) ::
+          {:error, {:edit_failed, integer}} | {:ok, :success}
   def run(editor_path, args, filepath) do
     # ensuring the folder exists
+    case File.mkdir_p(Path.dirname(filepath)) do
+      :ok ->
+        port =
+          :erlang.open_port({:spawn_executable, String.trim(editor_path)}, [
+            {:args, args ++ [filepath]},
+            :exit_status,
+            :nouse_stdio
+          ])
 
-    File.mkdir_p!(Path.dirname(filepath))
-
-    port =
-      :erlang.open_port({:spawn_executable, String.trim(editor_path)}, [
-        {:args, args ++ [filepath]},
-        :exit_status,
-        :nouse_stdio
-      ])
-
-    receive do
-      {^port, {:exit_status, exit_status}} ->
-        case exit_status do
-          0 -> {:ok, :success}
-          exit_status -> {:error, {:edit_failed, exit_status}}
+        receive do
+          {^port, {:exit_status, exit_status}} ->
+            case exit_status do
+              0 -> {:ok, :success}
+              exit_status -> {:error, {:edit_failed, exit_status}}
+            end
         end
+
+      {:error, _} ->
+        {:error, {:edit_failed, 11}}
     end
   end
 end

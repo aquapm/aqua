@@ -4,9 +4,9 @@ defmodule Aqua.Views.Add do
   alias Aqua.Render.Symbols, as: S
   alias Aqua.Render.Layout, as: L
 
-  @spec panic(any()) :: no_return()
-  def panic(:not_in_project) do
-    View.die([
+  @spec fail(any()) :: no_return()
+  def fail(:not_in_project) do
+    [
       L.p(0, [
         T.error_highlight(S.fail()),
         T.text("You are calling"),
@@ -21,11 +21,11 @@ defmodule Aqua.Views.Add do
         T.error_highlight("right filesystem place", :no_padding),
         T.text(".")
       ])
-    ])
+    ]
   end
 
-  def panic(:invalid_path_alias) do
-    View.die([
+  def fail(:invalid_path_alias) do
+    [
       L.p(0, [
         T.error_highlight(S.fail()),
         T.text("You are calling"),
@@ -41,11 +41,11 @@ defmodule Aqua.Views.Add do
         T.error_highlight("didn't skip"),
         T.text("this parameter before calling additional arguments.")
       ])
-    ])
+    ]
   end
 
-  def panic(:absolute_path) do
-    View.die([
+  def fail(:absolute_path) do
+    [
       L.p(0, [
         T.error_highlight(S.fail()),
         T.text("Given path is out of the project scope!")
@@ -65,11 +65,11 @@ defmodule Aqua.Views.Add do
           ]
         ]
       )
-    ])
+    ]
   end
 
-  def panic({:no_sub_app, type, apps}) do
-    View.die([
+  def fail({:no_sub_app, type, apps}) do
+    [
       L.p(0, [
         T.error_highlight(S.fail()),
         T.text("For given"),
@@ -77,7 +77,8 @@ defmodule Aqua.Views.Add do
         T.text(","),
         T.text("umbrella's child application can't be found!")
       ]),
-      L.ul(2,
+      L.ul(
+        2,
         T.text("Available applications are:"),
         Enum.map(apps, &T.elixir/1)
       ),
@@ -87,23 +88,23 @@ defmodule Aqua.Views.Add do
         T.error_highlight("again", :no_padding),
         T.text("!")
       ])
-    ])
+    ]
   end
 
-  def panic({:git, reason}) do
-    View.panic(["Fail!\n", reason])
+  def fail({:git, reason}) do
+    ["Fail!\n", reason]
   end
 
-  def panic(:inject_not_found) do
-    View.panic([
+  def fail(:inject_not_found) do
+    [
       "Given inject is not defined!\nPlease ensure:\n\n",
       View.il([:yellow, "You are calling your inject after right template\n"]),
       View.il([:yellow, "For current template injection, or its alias, exists.\n"])
-    ])
+    ]
   end
 
   # This is fallback for uncoverd problems
-  def panic(problem) do
-    View.panic(inspect(problem))
+  def fail(problem) do
+    View.fail(inspect(problem))
   end
 end

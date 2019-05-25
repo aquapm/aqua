@@ -13,12 +13,12 @@ defmodule Aqua.Render.Terms do
   }
 
   Enum.each(@prefix, fn {name, prefix} ->
-    @spec unquote(name)(iodata :: iodata) :: iodata
+    @spec unquote(name)(iodata :: iodata()) :: iodata()
     def unquote(name)(iodata) do
       [unquote(prefix), iodata, " "]
     end
 
-    @spec unquote(name)(iodata :: iodata, :no_padding) :: iodata
+    @spec unquote(name)(iodata :: iodata(), :no_padding) :: iodata()
     def unquote(name)(iodata, _no_padding) do
       [unquote(prefix), iodata]
     end
