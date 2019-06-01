@@ -23,6 +23,7 @@ defmodule Aqua.Render.Layout do
         [
           ident(ident),
           Terms.aqua(Symbols.bullet()),
+          " ",
           list_item,
           "\n"
         ]
