@@ -16,4 +16,13 @@ defmodule Aqua.Constants do
   def config_filename do
     ".aquaconfig"
   end
+
+
+  @doc """
+  Returns filename for AquaPM templates list.
+  """
+  @spec aquapm_templates_list_filename() :: String.t()
+  def aquapm_templates_list_filename do
+    "aquapm_templates.list"
+  end
 end
