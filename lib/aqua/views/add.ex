@@ -1,8 +1,5 @@
 defmodule Aqua.Views.Add do
-  alias Aqua.View
-  alias Aqua.Render.Terms, as: T
-  alias Aqua.Render.Symbols, as: S
-  alias Aqua.Render.Layout, as: L
+  use Aqua.Render
 
   @spec fail(any()) :: no_return()
   def fail(:not_in_project) do
@@ -52,7 +49,7 @@ defmodule Aqua.Views.Add do
       ]),
       L.ul(
         2,
-        T.text("Please ensure:"),
+        T.text("Please ensure that:"),
         [
           [
             T.text("You are not passing"),
@@ -92,14 +89,43 @@ defmodule Aqua.Views.Add do
   end
 
   def fail({:git, reason}) do
-    ["Fail!\n", reason]
+    [
+      L.p(0, [
+        T.error_highlight(S.fail()),
+        T.error("Git Fail!")
+      ]),
+      L.p(2, T.text(reason))
+    ]
   end
 
   def fail(:inject_not_found) do
     [
-      "Given inject is not defined!\nPlease ensure:\n\n",
-      View.il([:yellow, "You are calling your inject after right template\n"]),
-      View.il([:yellow, "For current template injection, or its alias, exists.\n"])
+      L.p(0, [
+        T.error_highlight(S.fail()),
+        T.text("Given inject is not defined!")
+      ]),
+      L.ul(
+        2,
+        T.text("Please ensure:"),
+        [
+          [
+            T.text("You are calling your"),
+            T.aqua("inject"),
+            T.text("from"),
+            T.error_highlight("right"),
+            T.aqua("template")
+          ],
+          [
+            T.aqua("Injection"),
+            T.text("or it's"),
+            T.aqua("alias"),
+            T.text("exist"),
+            T.text("for"),
+            T.error_highlight("current"),
+            T.aqua("template")
+          ]
+        ]
+      )
     ]
   end
 
