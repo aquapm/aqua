@@ -3,6 +3,7 @@ defmodule Aqua.Views.Help do
   alias Aqua.Render.Symbols, as: S
   alias Aqua.Render.Layout, as: L
 
+  @spec aqua() :: iodata()
   def aqua() do
     [
       L.p(0, [
@@ -38,6 +39,26 @@ defmodule Aqua.Views.Help do
         T.text("In order to retreive more information about specific command - try to call"),
         T.bash("mix aqua help"),
         T.elixir("YOUR_COMMAND")
+      ])
+    ]
+  end
+
+  @spec new() :: iodata()
+  def new() do
+    [
+      L.p(0, [
+        T.initial("NEW"),
+        T.text("-"),
+        T.text("generates new project with given"),
+        T.aqua("TEMPLATE"),
+        T.text("under given"),
+        T.fs("PATH"),
+        T.text("with defined (or empty)"),
+        T.bash("ARGS")
+      ]),
+      L.ul(0, T.text("This command can be run either:"), [
+        [T.text("in"), T.elixir("Not an Elixir project foider")],
+        [T.text("in"), T.elixir("Elixir's umbrella project root")]
       ])
     ]
   end

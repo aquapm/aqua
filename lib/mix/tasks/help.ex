@@ -1,10 +1,6 @@
 defmodule Aqua.Tasks.Help do
   alias Aqua.View
 
-  alias Aqua.Render.Terms, as: T
-  alias Aqua.Render.Symbols, as: S
-  alias Aqua.Render.Layout, as: L
-
   def aqua() do
 
   end
