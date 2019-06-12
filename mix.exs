@@ -8,7 +8,7 @@ defmodule Aqua.MixProject do
     [
       app: @app,
       version: @version,
-      elixir: "~> 1.6",
+      elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),

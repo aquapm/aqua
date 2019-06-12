@@ -61,7 +61,8 @@ defmodule Aqua.ProjectParser.Umbrella do
         {:error, {:no_sub_app, :path, Map.keys(apps)}}
 
       [{_app_name, app_path}] ->
-        case Path.relative_to(checked_path, app_path)
+        case checked_path
+             |> Path.relative_to(app_path)
              |> ProjectParser.path_part_to_alias() do
           {:ok, module_alias} -> {:ok, {checked_path, module_alias}}
           error -> error
@@ -79,7 +80,8 @@ defmodule Aqua.ProjectParser.Umbrella do
       {:ok, project_name} ->
         {:ok,
          {project_name,
-          Path.join(apps_path, project_name)
+          apps_path
+          |> Path.join(project_name)
           |> Path.expand()
           |> Path.relative_to_cwd()}}
 

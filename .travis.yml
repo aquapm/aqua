@@ -1,7 +1,7 @@
 language: elixir
 
 elixir:
-  - 1.6
+  - 1.7
 
 otp_release:
   - 21.2
@@ -11,7 +11,7 @@ env:
 
 script:
   - mix compile --warnings-as-errors 
-  - mix credo --strict
+  - mix credo
   - mix coveralls.travis
 
 after_script:

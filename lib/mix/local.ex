@@ -19,7 +19,6 @@ defmodule Mix.Tasks.Local.Aqua do
   Example:
       mix local.aqua config
 
-
   """
 
   @shortdoc "Local-copy Aqua tasks"
