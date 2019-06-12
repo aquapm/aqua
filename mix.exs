@@ -29,7 +29,7 @@ defmodule Aqua.MixProject do
 
   def description() do
     """
-    Elixir project management tool.
+    Elixir project scaffoldment tool.
     """
   end
 
@@ -39,8 +39,7 @@ defmodule Aqua.MixProject do
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:excoveralls, "~> 0.11", only: :test},
       {:credo, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
-      {:inch_ex, "~> 2.0", only: :docs}
+      {:mix_test_watch, "~> 0.8", only: :dev, runtime: false}
     ]
   end
 
