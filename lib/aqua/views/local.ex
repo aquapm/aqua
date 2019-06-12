@@ -1,4 +1,5 @@
 defmodule Aqua.Views.Local do
+  @moduledoc false
   alias Aqua.View
 
   defdelegate success(io_list), to: View

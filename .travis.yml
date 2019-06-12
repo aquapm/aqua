@@ -1,7 +1,7 @@
 language: elixir
 
 elixir:
-  - 1.6
+  - 1.7
 
 otp_release:
   - 21.2
@@ -9,4 +9,7 @@ otp_release:
 env:
   - MIX_ENV=test
 
-script: mix coveralls.travis
+script:
+  - mix compile --warnings-as-errors 
+  - mix credo --strict
+  - mix coveralls.travis

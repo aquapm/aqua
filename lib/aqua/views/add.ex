@@ -1,4 +1,5 @@
 defmodule Aqua.Views.Add do
+  @moduledoc false
   alias Aqua.View
 
   @spec panic(any()) :: no_return()

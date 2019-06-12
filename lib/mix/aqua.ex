@@ -1,4 +1,5 @@
 defmodule Mix.Tasks.Aqua do
+  @moduledoc false
   use Mix.Task
 
   alias Aqua.Tasks.{New, Help, Add, Update, List}

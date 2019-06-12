@@ -1,7 +1,8 @@
 defmodule Aqua.Github do
+  @moduledoc false
   alias Aqua.Jason
 
-  def list_all_official_templates() do
+  def list_all_official_templates do
     :inets.start()
     :ssl.start()
 

@@ -1,4 +1,5 @@
 defmodule Aqua.Assigns do
+  @moduledoc false
   def date_time_values do
     {local_date_e, local_time_e} = :calendar.local_time()
     local_time = local_time_e |> Time.from_erl!() |> Time.to_string()

@@ -1,4 +1,5 @@
 defmodule Aqua.Schema.LocalTemplate do
+  @moduledoc false
   alias Aqua.Cache
   alias Aqua.Github
   alias Aqua.Template.Meta

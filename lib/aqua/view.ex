@@ -1,4 +1,5 @@
 defmodule Aqua.View do
+  @moduledoc false
   @spec panic(any()) :: no_return()
 
   # TODO: Set these colors everywhere where needed. Issue #3
@@ -23,7 +24,7 @@ defmodule Aqua.View do
     [:cyan, :bright, "➤  ", :normal, io_list]
   end
 
-  def done() do
+  def done do
     Mix.Shell.IO.info([:green, "✔  Done"])
   end
 

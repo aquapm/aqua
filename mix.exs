@@ -8,7 +8,7 @@ defmodule Aqua.MixProject do
     [
       app: @app,
       version: @version,
-      elixir: "~> 1.6",
+      elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
@@ -29,7 +29,7 @@ defmodule Aqua.MixProject do
 
   def description() do
     """
-    Elixir project management tool.
+    Elixir project scaffoldment tool.
     """
   end
 
@@ -37,8 +37,8 @@ defmodule Aqua.MixProject do
   defp deps do
     [
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:excoveralls, "~> 0.10", only: :test},
-      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.11", only: :test},
+      {:credo, "~> 1.1", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false}
     ]
   end

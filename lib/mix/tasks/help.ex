@@ -1,7 +1,8 @@
 defmodule Aqua.Tasks.Help do
+  @moduledoc false
   alias Aqua.View
 
-  def aqua() do
+  def aqua do
     Mix.Shell.IO.info([
       :light_cyan,
       :bright,
@@ -45,7 +46,7 @@ defmodule Aqua.Tasks.Help do
     ])
   end
 
-  def new() do
+  def new do
     Mix.Shell.IO.info([
       :green,
       :bright,
@@ -188,7 +189,7 @@ defmodule Aqua.Tasks.Help do
     ])
   end
 
-  def add() do
+  def add do
     Mix.Shell.IO.info([
       :green,
       :bright,

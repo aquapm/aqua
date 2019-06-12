@@ -1,4 +1,5 @@
 defmodule Aqua.Generator do
+  @moduledoc false
   alias Aqua.Views.Generator, as: View
 
   def generate_template(generate_path, template, assigns) do
