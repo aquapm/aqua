@@ -2,6 +2,10 @@ defmodule Aqua.Tasks.Help do
   alias Aqua.View
 
   def aqua() do
+
+  end
+
+  def aqua() do
     Mix.Shell.IO.info([
       :light_cyan,
       :bright,

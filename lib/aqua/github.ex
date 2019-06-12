@@ -1,23 +1,16 @@
 defmodule Aqua.Github do
   alias Aqua.Jason
+  alias Aqua.Github.Client
 
+  @spec list_all_official_templates() :: [Aqua.Schema.Template.t()]
   def list_all_official_templates() do
-    :inets.start()
-    :ssl.start()
-
-    case :httpc.request(
-           :get,
-           {'https://api.github.com/orgs/aquapm/repos', [{'User-Agent', 'aqua'}]},
-           [{:ssl, [{:verify, 0}]}],
-           []
-         ) do
-      {:ok, {_, _, body_char_list}} ->
-        body_char_list
-        |> Jason.decode!()
+    case Client.get_aquapm_repos() do
+      {:ok, results} ->
+        results
         |> Enum.map(fn %{"name" => name, "url" => url} ->
           %Aqua.Schema.Template{name: name, url: url}
         end)
-        |> Enum.map(&validate_template/1)
+        |> Aqua.Jobs.ValidateRemoteTemplates.run()
         |> Enum.filter(fn %{valid: valid} -> valid == true end)
 
       {:error, _} ->
@@ -29,6 +22,9 @@ defmodule Aqua.Github do
     url =
       String.replace(url, "api.github.com/repos", "raw.githubusercontent.com") <>
         "/master/manifest.json"
+
+    :inets.start()
+    :ssl.start()
 
     case :httpc.request(
            :get,
@@ -55,5 +51,8 @@ defmodule Aqua.Github do
 
   def generate_clone_url(user, repo) do
     "git@github.com:#{user}/#{repo}.git"
+  end
+
+  defp get_aquapm_repos() do
   end
 end

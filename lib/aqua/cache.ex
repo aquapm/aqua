@@ -23,6 +23,7 @@ defmodule Aqua.Cache do
     end
   end
 
+  @spec official_list() :: {:error, :invalid} | {:ok, any()}
   def official_list() do
     case File.read(official_list_path()) do
       {:error, _} ->

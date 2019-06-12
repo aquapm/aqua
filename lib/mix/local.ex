@@ -2,6 +2,7 @@ defmodule Mix.Tasks.Local.Aqua do
   use Mix.Task
 
   alias Aqua.Views.Local, as: View
+  alias Aqua.Editor
 
   @moduledoc """
   Local-copy Aqua tasks
@@ -19,43 +20,19 @@ defmodule Mix.Tasks.Local.Aqua do
   Example:
       mix local.aqua config
 
-
   """
 
   @shortdoc "Local-copy Aqua tasks"
   @doc false
   def run(["config" | _args]) do
-    case System.get_env("EDITOR") do
-      nil ->
-        View.panic(:editor_not_defined)
-
-      editor ->
-        case String.split(editor) do
-          [] ->
-            View.panic(:editor_not_defined)
-
-          [editor | args] ->
-            case System.cmd("which", [editor]) do
-              {"", _} ->
-                View.panic({:editor_not_found, editor})
-
-              {_, 1} ->
-                View.panic({:editor_not_found, editor})
-
-              {editor_path, _} ->
-                port =
-                  :erlang.open_port({:spawn_executable, String.trim(editor_path)}, [
-                    {:args, args ++ [Aqua.Cache.config_path()]},
-                    :exit_status,
-                    :nouse_stdio
-                  ])
-
-                receive do
-                  {^port, {:exit_status, _}} ->
-                    View.success(["Config successfully updated!"])
-                end
-            end
-        end
+    with {:ok, editor_command} <- Editor.ensure_environment_specified(),
+         {:ok, {editor_path, args}} <- Editor.get_editor(editor_command),
+         {:ok, _} <- Editor.run(editor_path, args, Aqua.Config.path()) do
+      {:ok, :success}
+    else
+      {:error, :not_defined} -> View.panic(:editor_not_defined)
+      {:error, :not_found} -> View.panic(:editor_not_found)
+      {:error, {:edit_failed, exit_status}} -> View.panic({:edit_failed, exit_status})
     end
   end
 

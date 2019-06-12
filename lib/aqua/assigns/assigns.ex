@@ -22,14 +22,7 @@ defmodule Aqua.Assigns do
 
   def os_type do
     case :os.type() do
-      {os, variant} ->
-        "#{os} (#{variant})"
-
-      {os} ->
-        "#{os}"
-
-      other ->
-        to_string(other)
+      {os, variant} -> "#{os} (#{variant})"
     end
   end
 

@@ -26,7 +26,7 @@ defmodule Aqua.Schema.Inject do
 
   @doc """
   Identifies the type of a project, on which the `mix aqua` command is called.
-  Set the valuse inside `Inject` structure under **project_type**.
+  Set the value inside `Inject` structure under **project_type**.
 
   Project structure can be:
 
