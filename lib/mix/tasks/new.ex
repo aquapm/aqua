@@ -1,4 +1,6 @@
 defmodule Aqua.Tasks.New do
+  @moduledoc false
+
   alias Aqua.Schema.Scaffold
   alias Aqua.Views.New, as: View
   alias Aqua.Tasks.Help

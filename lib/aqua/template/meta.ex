@@ -1,4 +1,5 @@
 defmodule Aqua.Template.Meta do
+  @moduledoc false
   alias Aqua.Jason
 
   def get_injection(repo_fs, inject_name) do

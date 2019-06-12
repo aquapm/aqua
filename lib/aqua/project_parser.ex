@@ -1,4 +1,6 @@
 defmodule Aqua.ProjectParser do
+  @moduledoc false
+
   @doc """
   This method will identify incoming path.
   It can be either:

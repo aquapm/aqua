@@ -1,4 +1,6 @@
 defmodule Aqua.Tasks.List do
+  @moduledoc false
+
   alias Aqua.Cache
   alias Aqua.Views.List, as: View
 

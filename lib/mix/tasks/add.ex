@@ -1,4 +1,5 @@
 defmodule Aqua.Tasks.Add do
+  @moduledoc false
   alias Aqua.Schema.Inject
   alias Aqua.Views.Add, as: View
   alias Aqua.Tasks.Help

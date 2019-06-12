@@ -1,4 +1,5 @@
 defmodule Aqua.Schema.Inject do
+  @moduledoc false
   alias Aqua.ProjectParser.Umbrella, as: UmbrellaParser
   alias Aqua.ProjectParser.Flat, as: FlatParser
   alias Aqua.Schema.LocalTemplate
@@ -169,36 +170,34 @@ defmodule Aqua.Schema.Inject do
           assigns: assigns
         } = inject
       ) do
-    try do
-      output = EEx.eval_file(Path.join(prefix_from_path, from_path), assigns: assigns)
+    output = EEx.eval_file(Path.join(prefix_from_path, from_path), assigns: assigns)
 
-      with false <- assigns[:force],
-           true <- File.exists?(to_path),
-           false <-
-             Aqua.View.safe_yes?([:red, :bright, "⚠ ", :normal, " File already exists. Override?"]) do
-        inject
-      else
-        _ ->
-          View.file_inject(Path.relative_to(to_path, File.cwd!()))
+    with false <- assigns[:force],
+         true <- File.exists?(to_path),
+         false <-
+           Aqua.View.safe_yes?([:red, :bright, "⚠ ", :normal, " File already exists. Override?"]) do
+      inject
+    else
+      _ ->
+        View.file_inject(Path.relative_to(to_path, File.cwd!()))
 
-          case File.mkdir_p(Path.dirname(to_path)) do
-            :ok ->
-              case File.write(to_path, output) do
-                :ok ->
-                  View.done()
-                  inject
+        case File.mkdir_p(Path.dirname(to_path)) do
+          :ok ->
+            case File.write(to_path, output) do
+              :ok ->
+                View.done()
+                inject
 
-                {:error, _error} ->
-                  {:error, :file_create}
-              end
+              {:error, _error} ->
+                {:error, :file_create}
+            end
 
-            {:error, _error} ->
-              {:error, :file_create}
-          end
-      end
-    rescue
-      error ->
-        %{inject | valid?: {:error, {:gen, error}}}
+          {:error, _error} ->
+            {:error, :file_create}
+        end
     end
+  rescue
+    error ->
+      %{inject | valid?: {:error, {:gen, error}}}
   end
 end

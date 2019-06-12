@@ -1,4 +1,5 @@
 defmodule Aqua.Config.CommonArgs do
+  @moduledoc false
   defstruct test: true,
             verbose: false,
             force: false,

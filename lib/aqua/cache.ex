@@ -1,20 +1,21 @@
 defmodule Aqua.Cache do
+  @moduledoc false
   alias Aqua.SCM.Git
 
   @spec aqua_path() :: binary()
-  def aqua_path() do
+  def aqua_path do
     System.user_home()
     |> Path.join(".aqua")
   end
 
   @spec config_path() :: binary()
-  def config_path() do
+  def config_path do
     aqua_path()
     |> Path.join("config.json")
   end
 
   @spec config() :: {:ok, Map.t()}
-  def config() do
+  def config do
     with {:ok, raw_config} <- File.read(config_path()),
          {:ok, config} <- Aqua.Jason.decode(raw_config, keys: :atoms) do
       {:ok, config}
@@ -23,7 +24,7 @@ defmodule Aqua.Cache do
     end
   end
 
-  def official_list() do
+  def official_list do
     case File.read(official_list_path()) do
       {:error, _} ->
         {:error, :invalid}
@@ -33,7 +34,7 @@ defmodule Aqua.Cache do
     end
   end
 
-  def update_official_list() do
+  def update_official_list do
     data = Aqua.Github.list_all_official_templates()
     path = official_list_path()
     File.mkdir(Path.dirname(path))

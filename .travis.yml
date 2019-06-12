@@ -11,6 +11,5 @@ env:
 
 script:
   - mix compile --warnings-as-errors 
-  - mix credo
+  - mix credo --strict
   - mix coveralls.travis
-  

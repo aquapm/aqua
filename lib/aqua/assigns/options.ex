@@ -1,4 +1,5 @@
 defmodule Aqua.Options do
+  @moduledoc false
   @default_args [
     %{"name" => "test", "default" => true, "type" => "boolean"},
     %{"name" => "force", "aliases" => ["f"], "default" => false, "type" => "boolean"}

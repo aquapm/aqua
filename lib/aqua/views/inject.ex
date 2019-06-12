@@ -1,4 +1,5 @@
 defmodule Aqua.Views.Inject do
+  @moduledoc false
   alias Aqua.View
 
   def file_inject(path) do

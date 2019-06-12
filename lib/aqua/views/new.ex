@@ -1,4 +1,5 @@
 defmodule Aqua.Views.List do
+  @moduledoc false
   alias Aqua.View
 
   def list(official, _cached) do

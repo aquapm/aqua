@@ -1,4 +1,5 @@
 defmodule Aqua.SCM.Git do
+  @moduledoc false
   def clone(git_repo_url, path) when is_binary(git_repo_url) and is_binary(path) do
     git_run(["clone", git_repo_url, path])
   end
