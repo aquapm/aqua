@@ -2,13 +2,13 @@ defmodule Aqua.MixProject do
   use Mix.Project
 
   @app :aqua
-  @version "0.9.2"
+  @version "1.0.0"
 
   def project do
     [
       app: @app,
       version: @version,
-      elixir: "~> 1.6",
+      elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),

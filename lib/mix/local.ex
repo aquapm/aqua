@@ -37,6 +37,6 @@ defmodule Mix.Tasks.Local.Aqua do
   end
 
   def run(_args) do
-    Mix.Task.run("archive.install", ["hex", "aqua", "~> 0.9"])
+    Mix.Task.run("archive.install", ["hex", "aqua", "~> 1.0"])
   end
 end

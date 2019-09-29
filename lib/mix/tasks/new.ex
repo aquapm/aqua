@@ -9,7 +9,8 @@ defmodule Aqua.Tasks.New do
   def run([template | [path | args]]) do
     case %Scaffold{raw: path}
          |> Steps.SetProjectType.perform()
-         |> Scaffold.assert_not_in_flat_project()
+         |> Validators.InProjectOfType.perform([:umbrella, :none])
+         |> Steps.PathCalculator.perform()
          |> Scaffold.calculate_pathes()
          |> Scaffold.load_template(template)
          |> Scaffold.generate_assigns(args)
