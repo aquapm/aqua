@@ -1,51 +1,40 @@
 defmodule Aqua.Tasks.Help do
   alias Aqua.View
 
-  def aqua() do
+  alias Aqua.Render.Terms, as: T
+  alias Aqua.Render.Symbols, as: S
+  alias Aqua.Render.Layout, as: L
 
+  def aqua() do
+    [
+      L.p(0, [
+        T.text_highlight("Welcome"),
+        T.text("to"),
+        T.aqua("Aqua"),
+        T.text("- your project scaffoldment tool!")
+      ]),
+      L.ul(0, T.text("List of available commands:"), [
+        [T.initial("new"), T.text("- generates new project;")],
+        [T.initial("add"), T.text("- adds new prefilled file to your project;")],
+        [T.initial("update"), T.text("updates template caches;")],
+        [
+          T.initial("list"),
+          T.text("- displays templates and prefilled files, availabel to be scaffolded;")
+        ]
+      ]),
+      L.p(0, [
+        T.text("In order to retreive more information about specific command - try to call:")
+      ]),
+      L.p(2, [
+        T.bash("$ mix aqua help"),
+        T.initial("YOUR_COMMAND")
+      ])
+    ]
   end
 
-  def aqua() do
-    Mix.Shell.IO.info([
-      :light_cyan,
-      :bright,
-      "Welcome ",
-      :normal,
-      :cyan,
-      "to ",
-      :light_blue,
-      :bright,
-      "Aqua",
-      :normal,
-      :cyan,
-      " - ",
-      "your project scaffolder tool!\n",
-      "List of available commands:\n\n",
-      View.il([:green, :bright, "new", :normal, :cyan, " - generates new project;\n"]),
-      View.il([
-        :green,
-        :bright,
-        "add",
-        :normal,
-        :cyan,
-        " - adds new prefilled file to your project;\n"
-      ]),
-      View.il([:green, :bright, "update", :normal, :cyan, " - updates template caches;\n"]),
-      View.il([
-        :green,
-        :bright,
-        "list",
-        :normal,
-        :cyan,
-        " - displays templates and prefilled files, availabel to be scaffolded;\n"
-      ]),
-      "\n",
-      "In order to retreive more information about specific command - try to call ",
-      :light_yellow,
-      :bright,
-      "mix aqua help YOUR_COMMAND ",
-      :normal,
-      :cyan
+  def new(:aa) do
+    L.p(0, [
+
     ])
   end
 

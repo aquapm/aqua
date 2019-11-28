@@ -28,4 +28,19 @@ defmodule Aqua.ModulePathConverter do
   def alias_to_path_part(raw_alias, extension \\ "ex") do
     Macro.underscore(raw_alias)<>"."<>extension
   end
+
+  @doc """
+  Function tries to validate the project name, which can be given in two different cases:
+
+  * snake_case
+  * CamelCase
+  """
+  @spec normalize_project_name(raw_project_name :: String.t()) :: {:ok, String.t()} | {:error, :invalid}
+  def normalize_project_name(raw_project_name) do
+    if inspect(Module.concat(Elixir, raw_project_name)) == raw_project_name do
+      Macro.underscore(raw_project_name)
+    else
+      # TODO: Implement sneak case
+    end
+  end
 end

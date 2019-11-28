@@ -13,5 +13,6 @@ defmodule Aqua.Render do
     |> IO.ANSI.format()
   end
 
+  @spec out(any, atom | pid) :: :ok
   def out(iodata, device \\ :stdio), do: IO.write(device, iodata)
 end

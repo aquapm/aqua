@@ -131,6 +131,9 @@ defmodule Aqua.Views.Add do
 
   # This is fallback for uncoverd problems
   def fail(problem) do
-    View.fail(inspect(problem))
+    L.p(0, [
+      T.error_highlight(S.fail()),
+      T.text(inspect(problem))
+    ])
   end
 end
