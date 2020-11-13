@@ -1,9 +1,7 @@
 defmodule Aqua.Tasks.Help do
   alias Aqua.View
 
-  alias Aqua.Render.Terms, as: T
-  alias Aqua.Render.Symbols, as: S
-  alias Aqua.Render.Layout, as: L
+  use Aqua.Render
 
   def aqua() do
     [
@@ -30,11 +28,16 @@ defmodule Aqua.Tasks.Help do
         T.initial("YOUR_COMMAND")
       ])
     ]
+    |> Aqua.Render.render() |> Aqua.Render.out()
   end
 
   def new(:aa) do
     L.p(0, [
-
+      T.initial("new"),
+      T.text("- generates new project with given"),
+      T.aqua("TEMPLATE"),
+      T.text("under given"),
+      T.fs("PATH")
     ])
   end
 

@@ -6,8 +6,8 @@ defmodule Aqua.XDG do
   ]
 
   for {name, path} <- @data do
+    @spec unquote(name)() :: Path.t()
     def unquote(name)() do
-      # System.get_env(String.upcase("xdg_#{unquote(name)}")) || unquote(path)
       System.get_env(unquote(String.upcase("xdg_#{name}"))) || unquote(path)
     end
   end
