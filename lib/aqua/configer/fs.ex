@@ -9,7 +9,7 @@ defmodule Aqua.Configer.Fs do
     case File.read(Fs.aqua_config_path()) do
       {:error, :enoent} -> {:error, :not_found}
       {:ok, output} ->
-        case Aqua.Jason.decode(output, keys: :atoms) do
+        case Jason.decode(output, keys: :atoms) do
           {:ok, config} -> {:ok, config}
           _ -> {:error, :corrupted}
         end

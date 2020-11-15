@@ -1,14 +1,22 @@
 defmodule Aqua.Fs do
-  @aqua_folder_path "~/.aqua"
-  @aqua_config_path "config.json"
-
-  @doc """
-  Returns path for Aqua local configuration file
-  It's generally located ar ~/.aqua/config.json
+  @moduledoc """
+  Represents helpers for local file system pathes
   """
-  def aqua_config_path do
-    @aqua_folder_path
-    |> Path.join(@aqua_config_path)
-    |> Path.expand()
+
+  alias Aqua.XDG
+  @aqua_config_name "aqua.config.json"
+
+  def local_config_path() do
+    XDG.config_home()
+    |> Path.join(@aqua_config_name)
+  end
+
+  @spec clean() :: no_return() | list(String.t())
+  @doc """
+  Returns list of deleted files or raises
+  """
+  def clean() do
+    XDG.folder_list()
+    |> Enum.map(&File.rm_rf!/1)
   end
 end

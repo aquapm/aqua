@@ -12,6 +12,7 @@ defmodule Aqua.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
+      escript: escript(),
       description: description(),
       aliases: aliases(),
       docs: docs(),
@@ -27,15 +28,18 @@ defmodule Aqua.MixProject do
 
   def application, do: [extra_applications: [:logger]]
 
-  def description() do
-    """
-    Elixir project management tool.
-    """
+  def description(), do: "Elixir project management tool."
+
+  def escript() do
+    [
+      main_module: Aqua.Main,
+      comment: description(),
+    ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:jason, "~> 1.2"},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:mox, "~> 0.5.0", only: :test},
       {:excoveralls, "~> 0.10", only: :test},
@@ -75,17 +79,14 @@ defmodule Aqua.MixProject do
 
   defp build_releases(_) do
     Mix.env(:prod)
-    Mix.Tasks.Compile.run([])
-    Mix.Tasks.Compile.run([])
-    Mix.Tasks.Archive.Build.run(["--output=./#{@app}-archive/#{@app}-#{@version}.ez"])
-    File.cp("./#{@app}-archive/#{@app}-#{@version}.ez", "./#{@app}-archive/#{@app}.ez")
+    Mix.Tasks.Escript.Build.run([])
   end
 
   def uninstall_archive(_) do
-    Mix.Tasks.Archive.Uninstall.run(["aqua-#{@version}", "--force"])
+    Mix.Tasks.Escript.Uninstall.run(["#{@app}", "--force"])
   end
 
   defp reinstall_archive(_) do
-    Mix.Tasks.Archive.Install.run(["aqua-archive/aqua.ez", "--force"])
+    Mix.Tasks.Escript.Install.run(["#{@app}", "--force"])
   end
 end

@@ -11,4 +11,10 @@ defmodule Aqua.XDG do
       System.get_env(unquote(String.upcase("xdg_#{name}"))) || unquote(path)
     end
   end
+
+
+  @spec folder_list :: [Path.t()]
+  def folder_list() do
+    Keyword.values(@data)
+  end
 end

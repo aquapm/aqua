@@ -18,7 +18,7 @@ defmodule Aqua.Editor do
           {:error, :not_found} | {:ok, {String.t(), [String.t()]}}
   def get_editor(editor_command) do
     with [editor | args] <- String.split(editor_command),
-         {:ok, editor_path} <- Aqua.Cli.which(editor) do
+         {:ok, editor_path} <- Aqua.CLI.which(editor) do
       {:ok, {editor_path, args}}
     else
       _ -> {:error, :not_found}

@@ -10,7 +10,7 @@ defmodule Aqua.Render do
 
   def render(iodata) do
     iodata
-    |> IO.ANSI.format()
+    |> IO.ANSI.format(true)
   end
 
   @spec out(any, atom | pid) :: :ok

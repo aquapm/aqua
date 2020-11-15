@@ -82,4 +82,8 @@ defmodule Aqua.Views.Help do
       ])
     ]
   end
+
+  def local() do
+    [:todo]
+  end
 end
