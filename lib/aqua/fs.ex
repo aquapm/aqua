@@ -6,6 +6,7 @@ defmodule Aqua.Fs do
   alias Aqua.XDG
   @aqua_config_name "aqua.config.json"
 
+  @spec local_config_path :: Path.t()
   def local_config_path() do
     XDG.config_home()
     |> Path.join(@aqua_config_name)

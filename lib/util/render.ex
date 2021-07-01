@@ -7,10 +7,16 @@ defmodule Aqua.Render do
     end
   end
 
-
   def render(iodata) do
     iodata
-    |> IO.ANSI.format(true)
+    |> IO.ANSI.format()
+  end
+
+  @spec verbose(any, atom | pid) :: :ok
+  def verbose(iodata, device \\ :stdio) do
+    if Application.get_env(:aqua, :verbose) do
+      IO.write(device, iodata)
+    end
   end
 
   @spec out(any, atom | pid) :: :ok

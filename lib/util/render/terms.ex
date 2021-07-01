@@ -9,7 +9,8 @@ defmodule Aqua.Render.Terms do
     initial: [:green, :bright],
     error: [:red, :normal],
     error_highlight: [:red, :bright],
-    success: [:green, :normal]
+    success: [:green, :normal],
+    verbose: [:light_black, :bright]
   }
 
   Enum.each(@prefix, fn {name, prefix} ->
